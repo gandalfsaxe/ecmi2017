@@ -9,6 +9,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 
+print 'hello'
+
 
 def create_test_array():                               
     G = nx.Graph()
