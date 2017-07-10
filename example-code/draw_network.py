@@ -9,33 +9,6 @@ import time
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
-
-
-def create_test_array():               
-    ''' Test array '''                
-    graph = nx.Graph()
-    edges = [(1,2,2),(2,3,1),(2,4,5),(3,4,2),(3,8,1),(8,6,4),(4,6,3)]
-    for start, end, length in edges:
-        graph.add_edge(start, end, length=length)
-        
-    return graph
-    
-def create_test_array_with_dead_end():
-    ''' Original array with an added dead-end node '''
-    graph = nx.Graph()
-    edges = [(1,2,2),(2,3,1),(2,4,5),(3,4,2),(3,8,1),(8,6,4),(4,6,3),(6,7,1)]
-    for start, end, length in edges:
-        graph.add_edge(start, end, length=length)
-        
-    return graph
-    
-
-def draw_network_with_delay(graph):
-    pos = nx.spring_layout(graph)
-    labels = nx.get_edge_attributes(graph, 'length')
-    nx.draw_networkx(graph, pos=pos)
-    nx.draw_networkx_edge_labels(graph, pos, edge_labels=labels)
-    plt.axis('off')
     
 def stochastic_decision_tree(graph, initial_node):
     ''' Finds a solution of the street plowing problem given a network with edges.
@@ -67,6 +40,7 @@ def stochastic_decision_tree(graph, initial_node):
             visited = graph[node][neighbor]['visited']
             if visited:
                 weight *= 0.1
+
             neighbor_weights[ind] = weight
         neighbor_weights /= sum(neighbor_weights)
         chosen_node = np.random.choice(neighbor_list, p=neighbor_weights)
@@ -91,7 +65,7 @@ def test_stochastic_decision_tree(graph, repetitions):
     ''' Simulate a stochastic decision tree "repetitions" amount of time.
     Starts every time at a random node. Returns shortest path '''
     shortest_distance = np.inf
-    
+
     for i in range(repetitions):
         initial_node = np.random.choice(graph.nodes())
         node_path, total_distance = stochastic_decision_tree(graph, initial_node)
@@ -99,7 +73,6 @@ def test_stochastic_decision_tree(graph, repetitions):
             shortest_distance = total_distance
             shortest_path = node_path
     return shortest_path, shortest_distance
-
 
 
 def main():
