@@ -17,7 +17,7 @@ with open(filename) as f:
 xy = np.array([feat['geometry']['coordinates'] for feat in gj['features'][::10]])
 
 # NEW DATA
-filename = os.path.join(os.path.dirname(__file__), '../../data', 'priority1-reversed.csv')
+filename = os.path.join(os.path.dirname(__file__), '../../data/TEMP', 'priority1-reversed.csv')
 df = pd.read_csv(filename, names=['Intersecting Streets', 'Latitude', 'Longitude'])
 
 xy= np.array(df.iloc[:,1:])
@@ -25,7 +25,7 @@ xy= np.array(df.iloc[:,1:])
 # Plot the path as red dots connected by a blue line
 plt.hold(True)
 plt.plot(xy[:,0], xy[:,1], 'r.')
-plt.plot(xy[:,0], xy[:,1], 'b')
+#plt.plot(xy[:,0], xy[:,1], 'b')
 
 root, ext = os.path.splitext(__file__)
 mapfile = root  + '.html'
