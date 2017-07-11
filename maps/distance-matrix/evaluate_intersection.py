@@ -6,6 +6,7 @@
 import urllib
 import json
 import csv
+import numpy as np
 
 def getdistancematrix(tablepath, MatrixName, APIKEY):
 
@@ -93,15 +94,16 @@ def getdistancematrix(tablepath, MatrixName, APIKEY):
     N = len(intersectionlist)
 
     # create a list as matrix
-    mylist = [[0] * N] * N
+    myarray = np.zeros((N,N))
 
     for i in distancelist:
         # find coordinates of intersectionpairs
         x = intersectionlist.index(i[0])
         y = intersectionlist.index(i[1])
-        mylist[x][y] = i[2]
-        mylist[y][x] = i[2]
+        myarray[x, y] = i[2]
+        myarray[y, x] = i[2]
 
+    mylist = myarray.tolist()
 
     with open(MatrixName, 'wb') as myfile:
         wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
