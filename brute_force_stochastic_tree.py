@@ -8,7 +8,7 @@ Created on Mon Jul 10 11:33:20 2017
 import time
 import numpy as np
 import matplotlib.pyplot as plt
-import networkx as nx
+import example_graphs
     
 def stochastic_decision_tree(graph, initial_node):
     ''' Finds a solution of the street plowing problem given a network with edges.
@@ -77,8 +77,8 @@ def test_stochastic_decision_tree(graph, repetitions):
 
 def main():
 #    graph = create_test_array()
-    graph = create_test_array_with_dead_end()
-    draw_network_with_delay(graph)
+    graph = example_graphs.create_test_array_notebook()
+    example_graphs.draw_network_with_labels(graph)
 #    print stochastic_decision_tree(graph, 1)
     print test_stochastic_decision_tree(graph, 1000)
 
