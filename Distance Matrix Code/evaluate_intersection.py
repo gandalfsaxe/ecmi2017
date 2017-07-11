@@ -97,8 +97,8 @@ def getdistancematrix(tablepath, MatrixName, APIKEY):
 
     for i in distancelist:
         # find coordinates of intersectionpairs
-        x = intersectionlist.index(i[0])
-        y = intersectionlist.index(i[1])
+        x = int(intersectionlist.index(i[0]))
+        y = int(intersectionlist.index(i[1]))
         mylist[x][y] = i[2]
         mylist[y][x] = i[2]
 
