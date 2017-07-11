@@ -1,0 +1,40 @@
+============MOST PROMISING============
+---------Chinese Postman Problem.pdf---------
+explains the classical algorithm to solve the most simple form of the problem.
+Can (relatively) easily be implemented by us from the ground up.
+    -> 1 vehicle, one-way streets, no priorities, etc.
+
+
+
+
+============LESS PROMISING============
+
+---------adaptive_large_neighborhood_search.pdf---------
+long review of this heuristic method that seems to be used a lot in snow-plowing optimization problems
+
+
+---------Computing optimal snowplow route plans using Genetic Algorithms.pdf---------
+
+---------Final paper discrete-morgan.pdf---------
+
+---------Randby2015 Optimizing routes for snow plowing in Trondheim using evolutionary algorithms.pdf---------
+
+---------review_part_i_perrier2006.pdf---------
+---------review_part_ii_perrier2006.pdf---------
+---------review_part_iii_perrier2007.pdf---------
+summarize work done on optimizing snow plowing-related problems. Some of them tackle the hardest forms of the problem:
+    -> More than one vehicle, priorities, refueling, etc.
+
+
+---------Route Allocation for Multiple Snowplows Using Genetic Algorithms.pdf---------
+
+---------Smith2_TSETFinalReport.pdf---------
+tackles the hardest forms of the problem:
+    -> More than one vehicle, priorities, refueling, dynamical update, etc.
+
+---------Snow-Plow Route Planning using AI Search.pdf---------
+
+---------SSP_Chapter-8.pdf---------
+
+---------Synchronized_arc_routing_for_snow_plowing_operatio.pdf---------
+relatively recent paper that deals with two-way streets

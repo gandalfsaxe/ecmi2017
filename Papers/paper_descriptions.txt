@@ -1,8 +1,0 @@
-- Chinese Postman Problem: explains the classical algorithm to solve the most simple form of the problem
-	-> 1 vehicle, one-way streets, no priorities, etc.
-- Perrier reviews: summarize work done on optimizing snow plowing-related problems. Some of them tackle the hardest forms of the problem:
-	-> More than one vehicle, priorities, refueling, etc.
-- Synchronized arc routing... : relatively recent paper that deals with two-way streets
-- Adaptive Large Neighborhood Search: long review of this heuristic method that seems to be used a lot in snow-plowing optimization problems
-- Smith2_TSETFinalReport: tackles the hardest forms of the problem:
-	-> More than one vehicle, priorities, refueling, dynamical update, etc.
