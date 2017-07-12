@@ -165,6 +165,7 @@ def solve_chinese_postman_problem(graph, start=None, end=None):
         
         found_ending = False
         while True:
+            print node, neighbor_visits
             #Loop until an appropriate (or None) neighbors are found
             next_non_visited_neighbor = next((n for n,visits in neighbor_visits.items() if visits != 0), None)
             if next_non_visited_neighbor == None:
@@ -208,7 +209,7 @@ def solve_chinese_postman_problem(graph, start=None, end=None):
     for node in path[1:]:
         check_distance += graph.edge[prev_node][node]['length']
         prev_node = node
-        
+
     if least_total_distance < check_distance:
         print 'WARNING: PATH OF FINAL DISTANCE IS NOT OPTIMAL'
         
@@ -225,9 +226,11 @@ def main():
 
 #    graph = example_graphs.create_test_array_notebook()
     graph = example_graphs.create_test_array_worked_example_33()
-    print solve_chinese_postman_problem(graph, start='A', end='H')
     example_graphs.draw_network_with_labels(graph)
+#    example_graphs.draw_network_with_labels(graph)
 #    node_order = add_node_order_to_graph(graph)
+    print solve_chinese_postman_problem(graph, start='E', end='E')
+
 
     
 
