@@ -42,8 +42,6 @@ A collection of papers. tackles the hardest forms of the problem:
 
 ---------Randby2015 Optimizing routes for snow plowing in Trondheim using evolutionary algorithms.pdf---------
 
----------Route Allocation for Multiple Snowplows Using Genetic Algorithms.pdf---------
-
 ---------Snow-Plow Route Planning using AI Search.pdf---------
 
 ---------SSP_Chapter-8.pdf---------
