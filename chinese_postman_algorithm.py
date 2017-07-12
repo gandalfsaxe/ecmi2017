@@ -36,6 +36,13 @@ def find_all_possible_list_of_pairs(l):
     EX: [a,b,c,d] -> [(ab,cd),(ac,bd),(ad,bc)] '''
     final_pair_list = []    
     possible_pairs = list(itertools.combinations(l,2))
+    print l,len(possible_pairs)
+
+    summ = 0
+    for i in itertools.combinations(possible_pairs, len(l)/2):
+        summ += 1
+    print 'summ', summ
+    
     for pair_list in itertools.combinations(possible_pairs, len(l)/2):
         node_list = zip(*pair_list)
         node_list = node_list[0] + node_list[1]
@@ -62,9 +69,18 @@ def analyze_odd_nodes(graph):
 
 
 def find_least_total_distance(graph, odd_node_list, odd_node_pairing_distance):
-    '''  Finds the optimum total distance in the chinese postman problem and the edges that must be backtracked '''        
+    '''  Finds the optimum total distance in the chinese postman problem and the edges that must be backtracked '''
+    if len(odd_node_list) < 2:
+        dict_of_graph_distances = nx.get_edge_attributes(graph, 'length')
+        least_total_distance = sum(dict_of_graph_distances.values())
+        backtracked_edges = []
+        return least_total_distance, backtracked_edges
+        
+    
+    print 'before all possible list of pairs'
     possible_pair_lists = find_all_possible_list_of_pairs(odd_node_list)
     best_pair_total_distance = np.inf
+    print len(possible_pair_lists)
     for pair_list in possible_pair_lists:
         total_distance = 0
         for node1, node2 in pair_list:
@@ -112,7 +128,7 @@ def solve_chinese_postman_problem(graph, start=None, end=None):
     
     #Deals with start/end nodes and computes least total distance and backtracked nodes
     odd_node_list, odd_node_pairing_distance = analyze_odd_nodes(graph)
-    
+    print 'I have analyzed odd nodes'
     if start == None or end == None:
         possible_startend_pairs= get_all_possible_pairings(odd_node_list, start, end)
         startend_dict = {} #{(start,end) : (least_total_distance, backtracked_edges)}
@@ -145,13 +161,14 @@ def solve_chinese_postman_problem(graph, start=None, end=None):
         else:
             least_total_distance, backtracked_edges = find_least_total_distance(graph, odd_node_list, odd_node_pairing_distance)
 
+    print 'I know the least total distance and backtracking nodes'
     # Count how many times each edge must be visited
     edge_visit_count = {edge:1 for edge in graph.edges()}
     for edge in backtracked_edges:
         try:
             edge_visit_count[edge] += 1
         except:
-            edge_visit_count[edge[::-1]]
+            edge_visit_count[edge[::-1]] += 1
     nx.set_edge_attributes(graph, 'visits', edge_visit_count)
     
     # Deterministic decision tree to get the path
@@ -161,11 +178,9 @@ def solve_chinese_postman_problem(graph, start=None, end=None):
     while True:
         neighbor_list = sorted(temporal_graph.neighbors(node))
         neighbor_visits = {n:temporal_graph[node][n]['visits'] for n in neighbor_list}
-        next_non_visited_neighbor = next((n for n,visits in neighbor_visits.items() if visits != 0), None)
-        
+
         found_ending = False
         while True:
-            print node, neighbor_visits
             #Loop until an appropriate (or None) neighbors are found
             next_non_visited_neighbor = next((n for n,visits in neighbor_visits.items() if visits != 0), None)
             if next_non_visited_neighbor == None:
@@ -195,6 +210,43 @@ def solve_chinese_postman_problem(graph, start=None, end=None):
             else:
                 temporal_graph.edge[node][next_non_visited_neighbor]['visits'] -= 1
             break
+        
+        
+#        neighbors_by_priority = sorted(neighbor_visits.keys(), key = lambda x:neighbor_visits[x], reverse = True)
+#        while True:
+#            #Loop until an appropriate (or None) neighbors are found
+##            next_non_visited_neighbor = next((n for n,visits in neighbor_visits.items() if visits != 0), None)
+#            next_non_visited_neighbor = next((n for n in neighbors_by_priority), None)
+#            print node, next_non_visited_neighbor, 'sorted neighbors:', neighbors_by_priority
+#            
+#            if next_non_visited_neighbor == None:
+#                break
+#            
+#            elif next_non_visited_neighbor == end and temporal_graph[node][end]['visits'] == 1:
+#                #Avoid the last visit to the ending node as long as other alternatives exist
+#                if len(neighbors_by_priority) == 1:
+#                    break
+#                else:
+#                    print 'ho', neighbors_by_priority
+#                    neighbors_by_priority.remove(end)
+#                    neighbors_by_priority.append(end)
+#                    print 'he', neighbors_by_priority
+#                    continue
+#
+#            if temporal_graph[node][next_non_visited_neighbor]['visits'] == 1:
+#                #Delete edges that won't be visited, unless they leave the graph unconnected
+#                temporal_graph.remove_edge(node, next_non_visited_neighbor)
+#                if len(temporal_graph.neighbors(node)) == 0:
+#                    temporal_graph.remove_node(node)
+#                if nx.is_connected(temporal_graph) == False:
+#                    original_length = graph[node][next_non_visited_neighbor]['length']
+#                    temporal_graph.add_edge(node, next_non_visited_neighbor, attr_dict = {'visits':1, 
+#                    'length':original_length})
+#                    neighbors_by_priority.remove(next_non_visited_neighbor)
+#                    continue
+#            else:
+#                temporal_graph.edge[node][next_non_visited_neighbor]['visits'] -= 1
+#            break
 
 
         if next_non_visited_neighbor == None:
@@ -220,16 +272,19 @@ def solve_chinese_postman_problem(graph, start=None, end=None):
     
 
 def main():
-    graph = example_graphs.create_test_array()
+#    graph = example_graphs.create_test_array()
 #    graph = example_graphs.create_test_array_with_dead_end()
 #    print solve_chinese_postman_problem(graph, start=None, end=None)
 
 #    graph = example_graphs.create_test_array_notebook()
     graph = example_graphs.create_test_array_worked_example_33()
-    example_graphs.draw_network_with_labels(graph)
 #    example_graphs.draw_network_with_labels(graph)
+    example_graphs.draw_network_with_labels(graph)
 #    node_order = add_node_order_to_graph(graph)
-    print solve_chinese_postman_problem(graph, start='E', end='E')
+    print solve_chinese_postman_problem(graph, start=None, end=None)
+
+#    graph = example_graphs.manual_map_one()
+#    print solve_chinese_postman_problem(graph, start=0, end=0)
 
 
     
