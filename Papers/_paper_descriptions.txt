@@ -9,9 +9,18 @@ Two pieces pseudocode that *might* be able to be implemented and tested.
 Relatively recent paper that deals with two-way streets.
 
 
+============NEEDS ASSESSMENT============
+
+---------Computing optimal snowplow route plans using Genetic Algorithms.pdf---------
+
+---------Snow-Plow Route Planning using AI Search.pdf---------
 
 
-============LESS PROMISING============
+
+
+
+
+============TOO LONG============
 ---------review_part_i_perrier2006.pdf---------
 ---------review_part_ii_perrier2006.pdf---------
 ---------review_part_iii_perrier2007.pdf---------
@@ -21,27 +30,13 @@ Too detailed. summarize work done on optimizing snow plowing-related problems. S
 ---------adaptive_large_neighborhood_search.pdf---------
 Too long. long review of this heuristic method that seems to be used a lot in snow-plowing optimization problems
 
-
 ---------Smith2_TSETFinalReport.pdf---------
 A collection of papers. tackles the hardest forms of the problem:
     -> More than one vehicle, priorities, refueling, dynamical update, etc.
 
-
-
-
-
-
-
-
-
-============NEEDS ASSESSMENT============
-
----------Computing optimal snowplow route plans using Genetic Algorithms.pdf---------
-
----------Final paper discrete-morgan.pdf---------
-
 ---------Randby2015 Optimizing routes for snow plowing in Trondheim using evolutionary algorithms.pdf---------
-
----------Snow-Plow Route Planning using AI Search.pdf---------
+Too long. 2015 study from Norway, using Memetic algorithm.
+There seems to be some pre-precessing steps etc., and the whole thing would take too much time
 
 ---------SSP_Chapter-8.pdf---------
+A little old, and more importantly, no pseudocode.
