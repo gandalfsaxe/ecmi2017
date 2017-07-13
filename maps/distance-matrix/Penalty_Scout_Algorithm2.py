@@ -3,7 +3,6 @@
 
 import networkx as nx
 import random
-import os
 import numpy as np
 import csv
 import time
@@ -18,8 +17,10 @@ edges = [('A', 'B', 6), ('A', 'C', 6), ('A', 'D', 7), ('B', 'D', 5), ('B', 'E', 
 for start, end, length in edges:
     G.add_edge(start, end, attr_dict={'length' : length, 'visits' : 0})
 """
+
+
 def create_graph_from_distance_matrix(distance_matrix):
-    ''' Creates graph from a matrix in which the element i,j indicates the distance between i and j '''
+    # Creates graph from a matrix in which the element i,j indicates the distance between i and j
     node_num = distance_matrix.shape[0]
     node_list = range(node_num)
     graph = nx.Graph()
@@ -28,7 +29,7 @@ def create_graph_from_distance_matrix(distance_matrix):
         for j in node_list:
             length = distance_matrix[i][j]
             if length > 0:
-                graph.add_edge(i,j, attr_dict={'length' : length, 'visits' : 0})
+                graph.add_edge(i, j, attr_dict={'length': length, 'visits_forward': 0, 'visits_backward': 0})
     return graph
 
 
@@ -54,10 +55,18 @@ def valuevertex(A, Walk, graph, penalty):
     now = Walk[-1]
     quality_A += G[now][A]['length']# * graph[now][A]['visits']
 
-    # number of visits of the path
-    quality_A += 2 * penalty * graph[now][A]['visits']
+    L = G.edges()
+    try:
+        L.index((now, A))
+        direction = 'visits_forward'
+    except:
+        L.index((A, now))
+        direction = 'visits_backward'
 
-    return quality_A
+    # number of visits of the path into current direction
+    quality_A += 2 * penalty * graph[now][A][direction]
+
+    return [quality_A, direction]
 
 
 def nextpoint(walk, graph, penalty):
@@ -65,17 +74,18 @@ def nextpoint(walk, graph, penalty):
         nodenow = walk[-1]
         points = graph.neighbors(nodenow)
         # sort the points to have best vertex first
-        if len(points)>1:
+        if len(points) > 1:
             i = 0
             # connect value to every point
             while i < len(points):
-                points[i] = [points[i], valuevertex(points[i], walk, graph, penalty)]
+                value = valuevertex(points[i], walk, graph, penalty)
+                points[i] = [points[i], value[0], value[1]]
                 i += 1
             # sort the list of points by the value connected
             points.sort(key=lambda x: x[1])
 
         else:
-            return points[0]
+            return [points[0], valuevertex(points[0], walk, graph, penalty)[1]]
 
         # now decide which point should be next, with highest chance for best point and lowest chance for worst point
         borders = range(1, len(points) + 1)[::-1] # e.g. for 3 points gives [3,2,1]
@@ -88,7 +98,7 @@ def nextpoint(walk, graph, penalty):
         for i in range(1, len(points) + 1):
 
                 if r_n < sum(borders[:i]):
-                    result = points[i-1][0]
+                    result = [points[i-1][0], points[i-1][2]]
                     break
 
         return result
@@ -116,7 +126,14 @@ def generate_walk(start, graph, expectedfitness, machines = 1, optimize='length'
     walk = [start] * machines
     finished = [False] * machines
     fitness = 0
+
+    # This list conatins every edge with both directions, which are being removed after passing
+    listofedgesold = graph.edges()
     listofedges = graph.edges()
+
+    for i in listofedgesold:
+        listofedges.append((i[1], i[0]))
+
     fraud_candidate = True
     final_walk = []
     # repeat the iteration until the graph is fully covered and current position is starting position
@@ -126,33 +143,31 @@ def generate_walk(start, graph, expectedfitness, machines = 1, optimize='length'
             walk_machine = walk[i][:]
             now = walk_machine[-1]
             next_vert = nextpoint(walk_machine, g, len(listofedges))
-            walk_machine.append(next_vert)
+            walk_machine.append(next_vert[0])
+            direction = next_vert[1]
             try:
-                g.edge[now][next_vert]['visits'] += 1
+                g.edge[now][next_vert[0]][direction] += 1
                 if optimize == 'length':
-                    fitness += g.edge[now][next_vert]['length']
+                    fitness += g.edge[now][next_vert[0]]['length']
                 elif optimize == 'time':
-                    if g.edge[now][next_vert]['visits'] == 1:
-                        fitness += (g.edge[now][next_vert]['length']/15)*60
+                    if g.edge[now][next_vert[0]][direction] == 1:
+                        fitness += (g.edge[now][next_vert[0]]['length']/15)*60
                     else:
-                        fitness += (g.edge[now][next_vert]['length']/35)*60
+                        fitness += (g.edge[now][next_vert[0]]['length']/35)*60
             except:
-                g.edge[next_vert][now]['visits'] += 1
+                g.edge[next_vert[0]][now][direction] += 1
                 if optimize == 'length':
-                    fitness += g.edge[now][next_vert]['length']
+                    fitness += g.edge[now][next_vert[0]]['length']
                 elif optimize == 'time':
-                    if g.edge[now][next_vert]['visits'] == 1:
-                        fitness += (g.edge[now][next_vert]['length']/15)*60
+                    if g.edge[now][next_vert[0]][direction] == 1:
+                        fitness += (g.edge[now][next_vert[0]]['length']/15)*60
                     else:
-                        fitness += (g.edge[now][next_vert]['length']/35)*60
+                        fitness += (g.edge[now][next_vert[0]]['length']/35)*60
             try:
-                listofedges.remove((next_vert, now))
+                listofedges.remove((next_vert[0], now))
             except:
                 fitness += 0
-            try:
-                listofedges.remove((now, next_vert))
-            except:
-                fitness += 0
+
             walk[i] = walk_machine
             if my_endwhile(walk_machine, listofedges):
                 final_walk.append(walk_machine)
@@ -178,7 +193,7 @@ def start_penalty_scout(start, graph, N, machinenumber, optimize='length'):
         totallength += i[2]['length']
 
     # fitness in the end should be lower than the following value
-    expectedfitness = totallength * 2 * machinenumber
+    expectedfitness = totallength * 4 * machinenumber
     expectedfitness = expectedfitness * 4 if optimize=='time' else expectedfitness * 1
 
     W = start[:]
@@ -206,7 +221,6 @@ def start_penalty_scout(start, graph, N, machinenumber, optimize='length'):
             writer = csv.writer(csvfile)
             [writer.writerow(r) for r in table]
 
-
     return [iteration, candidate_old]
 
 
@@ -224,11 +238,10 @@ if __name__ == '__main__':
     print(totallength)
 
     tt = time.time()
-
-    machinenumber = 1
-
-    """Calculating optimum for shortest time"""
-    N = 1000000
+    N = 100000
+    machinenumber = 3
+    """
+    
     valueofinterest = 'time'
 
     candidate = start_penalty_scout(W, G, N, machinenumber, valueofinterest)
@@ -240,7 +253,7 @@ if __name__ == '__main__':
     print(valueofinterest)
     print('at iteration number:')
     print(iteration)
-
+    """
     """Calculating optimum for shortest length"""
 
     valueofinterest = 'length'
