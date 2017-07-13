@@ -15,6 +15,7 @@ import copy
 from collections import OrderedDict
 import example_graphs
 import pandas as pd
+import MinMatching
 
 def add_node_order_to_graph(graph):
     ''' Adds a label to each node specifying its order '''
@@ -36,12 +37,6 @@ def find_all_possible_list_of_pairs(l):
     EX: [a,b,c,d] -> [(ab,cd),(ac,bd),(ad,bc)] '''
     final_pair_list = []    
     possible_pairs = list(itertools.combinations(l,2))
-    print l,len(possible_pairs)
-
-    summ = 0
-    for i in itertools.combinations(possible_pairs, len(l)/2):
-        summ += 1
-    print 'summ', summ
     
     for pair_list in itertools.combinations(possible_pairs, len(l)/2):
         node_list = zip(*pair_list)
@@ -77,10 +72,8 @@ def find_least_total_distance(graph, odd_node_list, odd_node_pairing_distance):
         return least_total_distance, backtracked_edges
         
     
-    print 'before all possible list of pairs'
     possible_pair_lists = find_all_possible_list_of_pairs(odd_node_list)
     best_pair_total_distance = np.inf
-    print len(possible_pair_lists)
     for pair_list in possible_pair_lists:
         total_distance = 0
         for node1, node2 in pair_list:
@@ -119,16 +112,128 @@ def get_all_possible_pairings(node_list, remove1, remove2):
                     
     if remove1 == None and remove2 == None:
         return list(itertools.combinations(node_list,2))
+        
+def find_eulerian_path_same_startend(graph, start):
+    ''' Finds an eulerian path in the graph that returns to the starting point'''
+    if nx.is_eulerian(graph) == False:
+        print 'Graph is not eulerian, aborting'
+        return
+        
+    eulerian_edge_path = nx.eulerian_circuit(graph, source=start)
+    path = []
+    for edge in eulerian_edge_path:
+        path.append(edge[0])
+    path.append(edge[1])
+    return path
+        
+def find_eulerian_path_different_startend(graph, start, end):
+    ''' Finds an eulerian path in the graph that (tries to) start and end at different points.'''
+    # Deterministic decision tree to get the path
+    path = [start]
+    node = start
+    temporal_graph = copy.deepcopy(graph)
+    while True:
+        #Order neighbors by alphabet/number and remaining visits
+        neighbor_list = sorted(temporal_graph.neighbors(node))
+        neighbor_visits = {n:len(temporal_graph[node][n]) for n in neighbor_list}
+        neighbor_list = sorted(neighbor_visits.keys(), key=lambda x:neighbor_visits[x], reverse=True)
+        while True:
+#            print 'change',node, neighbor_list, neighbor_visits
+            #Loop until an appropriate (or None) neighbors are found
+            next_non_visited_neighbor = next(iter(neighbor_list), None)
 
+            if next_non_visited_neighbor == None:
+                #If no neighbor or ending is found break
+                break
+            
+            elif next_non_visited_neighbor == end and len(neighbor_list)>1 and neighbor_visits[end] == 1:
+                #Avoid the last visit to the ending node as long as other alternatives exist
+                neighbor_list = neighbor_list[1:] + [end]
+                continue
+
+            #Delete crossed edges, unless they leave the graph unconnected
+            temporal_graph.remove_edge(node, next_non_visited_neighbor)
+            if len(temporal_graph.neighbors(node)) == 0:
+                temporal_graph.remove_node(node)
+            if nx.is_connected(temporal_graph) == False:
+                original_length = graph[node][next_non_visited_neighbor][0]['length']
+                temporal_graph.add_edge(node, next_non_visited_neighbor, attr_dict = {'length':original_length})
+                del neighbor_visits[next_non_visited_neighbor]
+                continue
+            break
+
+        if next_non_visited_neighbor == None:
+            #No more options -> cleared
+            break
+
+        node = next_non_visited_neighbor
+        path.append(node)
+    return path
+
+def create_dense_graph(nodes, distance_matrix):
+    ''' Returns a graph in which all nodes are connected, with weights according to their distance matrix '''
+    dense_graph = nx.Graph()
+    for n1 in nodes:
+        for n2 in nodes:
+            if n1 == n2:
+                continue
+            dense_graph.add_edge(n1, n2, attr_dict = {'length':distance_matrix[n1][n2]})
+    return dense_graph
     
-def solve_chinese_postman_problem(graph, start=None, end=None):
+def solve_chinese_postman_problem_efficient(graph, start=None):
+    ''' Returns the path and total distance that solves the chinese postman
+    problem using efficient algorithms '''
+    
+    odd_node_list, odd_node_pairing_distance = analyze_odd_nodes(graph)
+    dense_odd_node_graph = create_dense_graph(odd_node_list, odd_node_pairing_distance)
+    
+    optimal_odd_node_matching = MinMatching.Get_Min_Weight_Matching(dense_odd_node_graph)
+
+    print optimal_odd_node_matching
+    node_list = optimal_odd_node_matching.keys()
+    optimal_odd_node_pairs = []
+    while True:
+        node1 = next(iter(node_list), None)
+        if node1 == None:
+            break
+        
+        node2 = optimal_odd_node_matching[node1]
+        node_list.remove(node1)
+        node_list.remove(node2)
+        optimal_odd_node_pairs.append((node1,node2))
+        
+    print optimal_odd_node_pairs
+
+    backtracked_edges = []
+    best_pair_optimal_distance = 0
+    for node1,node2 in optimal_odd_node_pairs:
+        best_pair_optimal_distance += odd_node_pairing_distance[node1][node2]
+        backtracked_nodes = nx.shortest_path(graph, source=node1, target=node2, weight='length')
+        for ind in range(len(backtracked_nodes)-1):
+            backtracked_edges.append((backtracked_nodes[ind], backtracked_nodes[ind+1]))
+        
+    
+    dict_of_graph_distances = nx.get_edge_attributes(graph, 'length')
+    total_graph_distance = sum(dict_of_graph_distances.values())
+    least_total_distance = total_graph_distance + best_pair_optimal_distance
+    
+    #Create enhanced eulerian graph in which backtracked edges are repeated
+    graph_extended = nx.MultiGraph(graph)
+    for node1,node2 in backtracked_edges:
+        graph_extended.add_edge(node1, node2, attr_dict = {'length': graph[node1][node2]['length']})
+    
+    path = find_eulerian_path_same_startend(graph_extended, start)
+            
+    return least_total_distance, path
+    
+    
+def solve_chinese_postman_problem_iterative_algorithm(graph, start=None, end=None):
     ''' Returns the path and total distance that solves the chinese postman problem.
     If "start" and/or "end" are None, then it finds the most optimal starting and/or ending points.
     "Start" and "End" can be the same number'''
     
     #Deals with start/end nodes and computes least total distance and backtracked nodes
     odd_node_list, odd_node_pairing_distance = analyze_odd_nodes(graph)
-    print 'I have analyzed odd nodes'
     if start == None or end == None:
         possible_startend_pairs= get_all_possible_pairings(odd_node_list, start, end)
         startend_dict = {} #{(start,end) : (least_total_distance, backtracked_edges)}
@@ -160,16 +265,11 @@ def solve_chinese_postman_problem(graph, start=None, end=None):
 
         else:
             least_total_distance, backtracked_edges = find_least_total_distance(graph, odd_node_list, odd_node_pairing_distance)
-
-    print 'I know the least total distance and backtracking nodes'
-    # Count how many times each edge must be visited
-    edge_visit_count = {edge:1 for edge in graph.edges()}
-    for edge in backtracked_edges:
-        try:
-            edge_visit_count[edge] += 1
-        except:
-            edge_visit_count[edge[::-1]] += 1
-    nx.set_edge_attributes(graph, 'visits', edge_visit_count)
+            
+    #Create enhanced eulerian graph in which backtracked edges are repeated
+    graph_extended = nx.MultiGraph(graph)
+    for node1,node2 in backtracked_edges:
+        graph_extended.add_edge(node1, node2, attr_dict = {'length': graph[node1][node2]['length']})
     
     # Deterministic decision tree to get the path
     path = [start]
@@ -177,7 +277,7 @@ def solve_chinese_postman_problem(graph, start=None, end=None):
     temporal_graph = copy.deepcopy(graph)
     while True:
         neighbor_list = sorted(temporal_graph.neighbors(node))
-        neighbor_visits = {n:temporal_graph[node][n]['visits'] for n in neighbor_list}
+        neighbor_visits = {n:len(temporal_graph[node][n]) for n in neighbor_list}
 
         found_ending = False
         while True:
@@ -190,7 +290,7 @@ def solve_chinese_postman_problem(graph, start=None, end=None):
                 else:
                     next_non_visited_neighbor = end
             
-            elif next_non_visited_neighbor == end and temporal_graph[node][end]['visits'] == 1:
+            elif next_non_visited_neighbor == end and neighbor_visits[end] == 1:
                 #Avoid the last visit to the ending node as long as other alternatives exist
                 del neighbor_visits[next_non_visited_neighbor]
                 found_ending = True
@@ -210,28 +310,48 @@ def solve_chinese_postman_problem(graph, start=None, end=None):
             else:
                 temporal_graph.edge[node][next_non_visited_neighbor]['visits'] -= 1
             break
-        
-        
-#        neighbors_by_priority = sorted(neighbor_visits.keys(), key = lambda x:neighbor_visits[x], reverse = True)
+
+        if next_non_visited_neighbor == None:
+            #No more options -> cleared
+            break
+
+        node = next_non_visited_neighbor
+        path.append(node)
+
+#
+#    # Count how many times each edge must be visited
+#    edge_visit_count = {edge:1 for edge in graph.edges()}
+#    for edge in backtracked_edges:
+#        try:
+#            edge_visit_count[edge] += 1
+#        except:
+#            edge_visit_count[edge[::-1]] += 1
+#    nx.set_edge_attributes(graph, 'visits', edge_visit_count)
+    
+#    # Deterministic decision tree to get the path
+#    path = [start]
+#    node = start
+#    temporal_graph = copy.deepcopy(graph)
+#    while True:
+#        neighbor_list = sorted(temporal_graph.neighbors(node))
+#        neighbor_visits = {n:temporal_graph[node][n]['visits'] for n in neighbor_list}
+#
+#        found_ending = False
 #        while True:
 #            #Loop until an appropriate (or None) neighbors are found
-##            next_non_visited_neighbor = next((n for n,visits in neighbor_visits.items() if visits != 0), None)
-#            next_non_visited_neighbor = next((n for n in neighbors_by_priority), None)
-#            print node, next_non_visited_neighbor, 'sorted neighbors:', neighbors_by_priority
-#            
+#            next_non_visited_neighbor = next((n for n,visits in neighbor_visits.items() if visits != 0), None)
 #            if next_non_visited_neighbor == None:
-#                break
+#                if found_ending == False:
+#                    #If no neighbor or ending is found break
+#                    break
+#                else:
+#                    next_non_visited_neighbor = end
 #            
 #            elif next_non_visited_neighbor == end and temporal_graph[node][end]['visits'] == 1:
 #                #Avoid the last visit to the ending node as long as other alternatives exist
-#                if len(neighbors_by_priority) == 1:
-#                    break
-#                else:
-#                    print 'ho', neighbors_by_priority
-#                    neighbors_by_priority.remove(end)
-#                    neighbors_by_priority.append(end)
-#                    print 'he', neighbors_by_priority
-#                    continue
+#                del neighbor_visits[next_non_visited_neighbor]
+#                found_ending = True
+#                continue
 #
 #            if temporal_graph[node][next_non_visited_neighbor]['visits'] == 1:
 #                #Delete edges that won't be visited, unless they leave the graph unconnected
@@ -242,19 +362,18 @@ def solve_chinese_postman_problem(graph, start=None, end=None):
 #                    original_length = graph[node][next_non_visited_neighbor]['length']
 #                    temporal_graph.add_edge(node, next_non_visited_neighbor, attr_dict = {'visits':1, 
 #                    'length':original_length})
-#                    neighbors_by_priority.remove(next_non_visited_neighbor)
+#                    del neighbor_visits[next_non_visited_neighbor]
 #                    continue
 #            else:
 #                temporal_graph.edge[node][next_non_visited_neighbor]['visits'] -= 1
 #            break
-
-
-        if next_non_visited_neighbor == None:
-            #No more options -> cleared
-            break
-
-        node = next_non_visited_neighbor
-        path.append(node)
+#
+#        if next_non_visited_neighbor == None:
+#            #No more options -> cleared
+#            break
+#
+#        node = next_non_visited_neighbor
+#        path.append(node)
         
     check_distance = 0
     prev_node = start
@@ -273,18 +392,31 @@ def solve_chinese_postman_problem(graph, start=None, end=None):
 
 def main():
 #    graph = example_graphs.create_test_array()
-#    graph = example_graphs.create_test_array_with_dead_end()
-#    print solve_chinese_postman_problem(graph, start=None, end=None)
+    graph = example_graphs.create_test_array_with_dead_end()
+#    print solve_chinese_postman_problem_iterative_algorithm(graph, start=1, end=1)
 
 #    graph = example_graphs.create_test_array_notebook()
-    graph = example_graphs.create_test_array_worked_example_33()
+#    graph = example_graphs.create_test_array_worked_example_33()
 #    example_graphs.draw_network_with_labels(graph)
-    example_graphs.draw_network_with_labels(graph)
 #    node_order = add_node_order_to_graph(graph)
-    print solve_chinese_postman_problem(graph, start=None, end=None)
+#    print solve_chinese_postman_problem_iterative_algorithm(graph, start='A', end='A')
 
 #    graph = example_graphs.manual_map_one()
 #    print solve_chinese_postman_problem(graph, start=0, end=0)
+
+#    print solve_chinese_postman_problem_efficient(graph, start=1)
+    print solve_chinese_postman_problem_iterative_algorithm(graph, start = 1, end = 1)
+
+#    g = nx.MultiGraph()
+#    g.add_edges_from([(1,2),(2,3),(2,4),(3,5),(4,5),(5,6),(2,3),(3,5)])
+##    g.add_edges_from([(2,3),(3,5)])
+#    example_graphs.draw_network_with_labels(g)
+#    nx.set_edge_attributes(g,'length',1)
+#    print find_eulerian_path_different_startend(g, 1, 6)
+
+    example_graphs.draw_network_with_labels(graph)
+
+    
 
 
     
