@@ -8,14 +8,11 @@ Classical algorithm that solves the chinese postman problem. Conditions:
 
 import time
 import numpy as np
-import matplotlib.pyplot as plt
 import networkx as nx
 import itertools
 import copy
-from collections import OrderedDict
 import example_graphs
 import pandas as pd
-import MinMatching
 
 def add_node_order_to_graph(graph):
     ''' Adds a label to each node specifying its order '''
@@ -30,6 +27,18 @@ def create_node_order_dict(graph):
         order = len(nx.neighbors(graph, node))
         node_order[node] = order
     return node_order
+    
+def calculate_distance(graph, path):
+    ''' Computes distance of travelling a path through a weighted graph. 
+    Path is given as [node1, node2, node3, ...] '''
+    total_distance = 0
+    for ind in range(len(path[:-1])):
+        node1 = path[ind]
+        node2 = path[ind+1]
+        distance = graph[node1][node2]['length']
+        total_distance += distance
+    return total_distance
+        
     
 def find_all_possible_list_of_pairs(l):
     ''' Given a list of nodes, this function groups them in pairs and returns all possible
@@ -48,51 +57,34 @@ def find_all_possible_list_of_pairs(l):
     
     return final_pair_list
     
+def Get_Min_Weight_Matching(G):
+    "Get_Min_Weight_Matching takes as input a complete weighted undirected networkx graph G, and returns a dictionary called matching, such that matching[v] == w if and only if the node v of G is matched with node w."
+    nodes = G.nodes()
+    # Get negative of distance matrix
+    NegDistMat = -nx.to_numpy_matrix(G, weight='length')
+    # Form new graph to obtain the matching
+    Gnew = nx.from_numpy_matrix(NegDistMat, create_using=None)
+    # Get min-weight matching
+    matching = nx.max_weight_matching(Gnew, maxcardinality=True)
+    # Return the matching
+    matching_with_correct_nodes = {nodes[i]:nodes[matching[i]] for i in matching.keys()}    
+    
+    return matching_with_correct_nodes
+
+    
 def analyze_odd_nodes(graph):
     ''' Returns list of nodes with odd number of neighbors and the distance
     between each pair '''
     
     node_order = add_node_order_to_graph(graph)
     odd_node_list = [node for node,order in node_order.items() if order%2 != 0]
-    odd_node_pairing_distance = pd.DataFrame(0, index=odd_node_list, columns=odd_node_list)
+    odd_node_pairing_distance = pd.DataFrame(0., index=odd_node_list, columns=odd_node_list)
     for node1, node2 in itertools.combinations(odd_node_list,2):
         min_distance = nx.shortest_path_length(graph, node1, node2, weight='length')
         odd_node_pairing_distance[node1][node2] = min_distance
         odd_node_pairing_distance[node2][node1] = min_distance
         
     return odd_node_list, odd_node_pairing_distance
-
-
-def find_optimal_graph_extension_original(graph, odd_node_list, odd_node_pairing_distance):
-    '''  Finds the optimum total distance in the chinese postman problem and the edges that must be backtracked '''
-    if len(odd_node_list) < 2:
-        dict_of_graph_distances = nx.get_edge_attributes(graph, 'length')
-        least_total_distance = sum(dict_of_graph_distances.values())
-        backtracked_edges = []
-        return least_total_distance, backtracked_edges
-        
-    
-    possible_pair_lists = find_all_possible_list_of_pairs(odd_node_list)
-    best_pair_total_distance = np.inf
-    for pair_list in possible_pair_lists:
-        total_distance = 0
-        for node1, node2 in pair_list:
-            total_distance += odd_node_pairing_distance[node1][node2]
-        if total_distance < best_pair_total_distance:
-            best_pair_list = pair_list
-            best_pair_total_distance = total_distance
-            
-    dict_of_graph_distances = nx.get_edge_attributes(graph, 'length')
-    total_graph_distance = sum(dict_of_graph_distances.values())
-    least_total_distance = total_graph_distance + best_pair_total_distance
-    
-    backtracked_edges = []
-    for node1, node2 in best_pair_list:
-        backtracked_nodes = nx.shortest_path(graph, source=node1, target=node2, weight='length')
-        for ind in range(len(backtracked_nodes)-1):
-            backtracked_edges.append((backtracked_nodes[ind], backtracked_nodes[ind+1]))
-            
-    return least_total_distance, backtracked_edges
     
         
 def find_eulerian_path_same_startend(graph, start):
@@ -167,7 +159,15 @@ def matching_algorithm_efficient(odd_node_list, odd_node_pairing_distance):
     minimizing the weights. Uses original formulation from Edmund and Johnson's '''
     dense_odd_node_graph = create_dense_graph(odd_node_list, odd_node_pairing_distance)
     
-    optimal_odd_node_matching = MinMatching.Get_Min_Weight_Matching(dense_odd_node_graph)
+    ####### SAVE ODD NODE DISTANCE MATRIX #######
+
+    dense_distance_matrix = nx.to_numpy_matrix(dense_odd_node_graph, weight='length')
+    np.savetxt("dense_graph.csv", dense_distance_matrix, delimiter=",")    
+
+    ####### SAVE ODD NODE DISTANCE MATRIX #######
+
+    
+    optimal_odd_node_matching = Get_Min_Weight_Matching(dense_odd_node_graph)
 
     node_list = optimal_odd_node_matching.keys()
     optimal_odd_node_pairs = []
@@ -215,10 +215,11 @@ def find_optimal_graph_extension(graph, odd_node_list, odd_node_pairing_distance
     elif matching_algorithm == 'efficient':
         best_pair_total_distance, best_pair_list = matching_algorithm_efficient(odd_node_list, odd_node_pairing_distance)
 
-            
     dict_of_graph_distances = nx.get_edge_attributes(graph, 'length')
     total_graph_distance = sum(dict_of_graph_distances.values())
     least_total_distance = total_graph_distance + best_pair_total_distance
+    
+    print total_graph_distance, best_pair_total_distance
     
     backtracked_edges = []
     for node1, node2 in best_pair_list:
@@ -287,7 +288,6 @@ def solve_chinese_postman_problem(graph, start=None, end=None, matching_algorith
         else:
             least_total_distance, backtracked_edges = find_optimal_graph_extension(graph, odd_node_list, odd_node_pairing_distance, matching_algorithm = matching_algorithm)
     
-    print backtracked_edges
     #Create enhanced eulerian graph in which backtracked edges are repeated
     graph_extended = nx.MultiGraph(graph)
     for node1,node2 in backtracked_edges:
@@ -302,6 +302,7 @@ def solve_chinese_postman_problem(graph, start=None, end=None, matching_algorith
         prev_node = node
 
     if least_total_distance < check_distance:
+        print least_total_distance
         print 'WARNING: PATH OF FINAL DISTANCE IS NOT OPTIMAL'
         
     if len(path)-1 < graph_extended.number_of_edges():
@@ -312,21 +313,21 @@ def solve_chinese_postman_problem(graph, start=None, end=None, matching_algorith
 
 def main():
 #    graph = example_graphs.create_test_array()
-    graph = example_graphs.create_test_array_with_dead_end()
-#    print solve_chinese_postman_problem_iterative_algorithm(graph, start=1, end=1)
+#    graph = example_graphs.create_test_array_with_dead_end()
+#    print solve_chinese_postman_problem(graph, start=1, end=1, matching_algorithm='efficient')
 
 #    graph = example_graphs.create_test_array_notebook()
-    graph = example_graphs.create_test_array_worked_example_33()
+#    graph = example_graphs.create_test_array_worked_example_33()
 #    example_graphs.draw_network_with_labels(graph)
 #    node_order = add_node_order_to_graph(graph)
-#    print solve_chinese_postman_problem_iterative_algorithm(graph, start='A', end='A')
+#    print solve_chinese_postman_problem(graph, start='A', end='A', matching_algorithm='efficient')
 
-#    graph = example_graphs.manual_map_one()
+
 #    print solve_chinese_postman_problem(graph, start=0, end=0)
 
-#    print solve_chinese_postman_problem_efficient(graph, start='A')
-#    print solve_chinese_postman_problem_iterative_algorithm(graph, start = 'A', end = 'A')
-    print solve_chinese_postman_problem(graph, start='A', end='A', matching_algorithm='original')
+    graph = example_graphs.manual_map_one()
+    print solve_chinese_postman_problem(graph, start=0, end=0, matching_algorithm='efficient')
+#    print calculate_distance(graph, [0, 1, 6, 8, 7, 11, 14, 18, 21, 20, 13, 12, 10, 12, 17, 20, 13, 14, 18, 15, 19, 22, 23, 21, 18, 15, 11, 7, 5, 6, 8, 9, 16, 19, 22, 16, 9, 3, 4, 3, 2, 1, 0])
 
 #    g = nx.MultiGraph()
 #    g.add_edges_from([(1,2),(2,3),(2,4),(3,5),(4,5),(5,6),(2,3),(3,5)])
