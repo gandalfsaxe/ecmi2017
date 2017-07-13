@@ -5,6 +5,7 @@ import networkx as nx
 import random
 import os
 import numpy as np
+import csv
 
 """
 G = nx.Graph()
@@ -115,7 +116,7 @@ def generate_walk(start, graph, expectedfitness, machines = 1 ):
     finished = [False] * machines
     fitness = 0
     listofedges = graph.edges()
-
+    fraud_candidate = True
     final_walk = []
     # repeat the iteration until the graph is fully covered and current position is starting position
     while len(finished) != 0:
@@ -145,16 +146,18 @@ def generate_walk(start, graph, expectedfitness, machines = 1 ):
                 walk.remove(walk[i])
                 finished = finished[1:]
                 break
-        if fitness > expectedfitness: # we get here only if the fitness of current walk is worse than the expected one
-            # the fitness will be increased, the walk is not going to be saved
-            fitness *= 2
+        if fitness > expectedfitness:
+            # we get here only if the fitness of current walk is worse than the expected one
+            # the walk is not going to be saved
+            fraud_candidate = False
             break
 
-    return [final_walk, fitness, machines]
+    return [final_walk, fitness, machines, fraud_candidate]
 
 
 def start_penalty_scout(start, graph, N, machinenumber):
 
+    G = graph.copy()
     # first generate initial guess of length,
     temp = G.edges(None, True)
     totallength = 0
@@ -165,7 +168,6 @@ def start_penalty_scout(start, graph, N, machinenumber):
     expectedfitness = totallength * 2 * machinenumber
 
     W = start[:]
-    G = graph[:]
 
     candidate_old = generate_walk(W, G, expectedfitness, machinenumber)
     iteration = 0
@@ -179,7 +181,8 @@ def start_penalty_scout(start, graph, N, machinenumber):
             candidate_old = candidate_new
             expectedfitness = candidate_old[1]
             iteration = i
-            table.append([iteration, expectedfitness, machinenumber, candidate_old[0]])
+            if candidate_old[3]:
+                table.append([iteration, expectedfitness, machinenumber, candidate_old[0]])
 
     with open('penaltyscoutlog.csv', 'w') as csvfile:
         writer = csv.writer(csvfile)
@@ -194,6 +197,7 @@ if __name__ == '__main__':
 
     temp = G.edges(None, True)
     totallength = 0
+
     for i in temp:
         totallength += i[2]['length']
 
@@ -204,24 +208,22 @@ if __name__ == '__main__':
 
     machinenumber = 1
 
-    iteration = 0
-    N = 1000
+    N = 100000
 
     candidate = start_penalty_scout(W, G, N, machinenumber)
+    iteration = candidate[0]
 
     print('END OF PROCESS, possible optimum is:')
     print(candidate[1])
     print('at iteration number:')
     print(iteration)
-    print('Shortest mashine path')
-    print(len(candidate[0][0]))
 
     file = open('solution.txt', 'w')
     file.truncate()
     file.write('Number of iterations tested: ' + str(N) + "\n")
-    file.write('Fitness of solution found: ' + str(candidate_old[1]) + "\n")
+    file.write('Fitness of solution found: ' + str(candidate[1][1]) + "\n")
     file.write('Path to follow is: ' + "\n")
-    file.write(str(candidate_old[0]))
+    file.write(str(candidate[0]))
 
     file.close()
 
