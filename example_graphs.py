@@ -11,9 +11,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 
-def create_graph_from_length_edges(edges):
+
+def create_graph_from_length_edges(edges, graph_type = nx.Graph):
     ''' Creates graph from edges, format must be (node1, node2, length) '''
-    graph = nx.Graph()
+    graph = graph_type()
     for start, end, length in edges:
         graph.add_edge(start, end, length=length)
     return graph
@@ -51,6 +52,11 @@ def create_test_array_worked_example_33():
     edges = [('A','B',6),('A','C',6),('A','D',7),('B','D',5),('B','E',10),('C','D',8),('C','F',7),('D','E',6),('D','G',9),('D','F',11),('E','G',8),('E','H',7),('F','G',10),('F','H',9),('G','H',5)]
     return create_graph_from_length_edges(edges)
     
+def create_test_array_multigraph():
+    ''' Crates array with a two-way edge in MultiGraph format '''
+    edges = [('A','B',13),('A','C',12),('A','C',11),('A','F',10),('B','C',14),('C','D',9),('D','F',9),('D','E',7),('E','F',6)]
+    return create_graph_from_length_edges(edges, graph_type = nx.MultiGraph)
+    
 def manual_map_one():
     ''' Creates the manual map '''
     path = os.getcwd() + os.sep + 'Data' + os.sep + 'Distance matrix for manual graph' + os.sep
@@ -64,11 +70,17 @@ def draw_network_with_labels(graph, layout = nx.spring_layout):
     
     labels = nx.get_edge_attributes(graph, 'length')
     nx.draw_networkx(graph, pos=pos)
-    nx.draw_networkx_edge_labels(graph, pos, edge_labels=labels)
     plt.axis('off')
+
+    if type(g) == nx.classes.multigraph.MultiGraph:
+        return
+
+    nx.draw_networkx_edge_labels(graph, pos, edge_labels=labels)
     
 if __name__ == '__main__':
 #    g = create_test_array_worked_example_33()
-    g = manual_map_one()
+    g = create_test_array_multigraph()
+
+#    g = manual_map_one()
     draw_network_with_labels(g, layout = nx.circular_layout)
     plt.show()
