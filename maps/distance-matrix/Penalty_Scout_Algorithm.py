@@ -29,6 +29,7 @@ def create_graph_from_distance_matrix(distance_matrix):
                 graph.add_edge(i,j, attr_dict={'length' : length, 'visits' : 0})
     return graph
 
+
 def manual_map_one():
     ''' Creates the manual map '''
     path = "/Users/Carl/Documents/GitHub/ecmi2017/data/Distance matrix for manual graph/"
@@ -36,11 +37,6 @@ def manual_map_one():
     distance_matrix = np.loadtxt(open(path+filename, "rb"), delimiter=",", skiprows=0)
     graph = create_graph_from_distance_matrix(distance_matrix)
     return graph
-
-# every walk should start and end at point A
-
-G = manual_map_one()
-W = [0]
 
 
 def valuevertex(A, Walk, graph, penalty):
@@ -108,7 +104,7 @@ def my_endwhile(walk, list):
         else: return False
 
 
-def generate_walk(start, graph, machines = 1):
+def generate_walk(start, graph, expectedfitness, machines = 1 ):
 
     """this function generates a walk through the graph with given start point
     start point is also ending point
@@ -125,7 +121,6 @@ def generate_walk(start, graph, machines = 1):
     while len(finished) != 0:
 
         for i in range(len(walk)):
-    # while not my_endwhile(walk, listofedges):
             walk_machine = walk[i][:]
             now = walk_machine[-1]
             next_vert = nextpoint(walk_machine, g, len(listofedges))
@@ -150,12 +145,52 @@ def generate_walk(start, graph, machines = 1):
                 walk.remove(walk[i])
                 finished = finished[1:]
                 break
-
+        if fitness > expectedfitness: # we get here only if the fitness of current walk is worse than the expected one
+            # the fitness will be increased, the walk is not going to be saved
+            fitness *= 2
+            break
 
     return [final_walk, fitness, machines]
 
 
+def start_penalty_scout(start, graph, N, machinenumber):
+
+    # first generate initial guess of length,
+    temp = G.edges(None, True)
+    totallength = 0
+    for i in temp:
+        totallength += i[2]['length']
+
+    # fitness in the end should be lower than the following value
+    expectedfitness = totallength * 2 * machinenumber
+
+    W = start[:]
+    G = graph[:]
+
+    candidate_old = generate_walk(W, G, expectedfitness, machinenumber)
+    iteration = 0
+
+    table = [['iteration', 'fitness', 'machines running', 'walkingpath']]
+
+    for i in range(N):
+
+        candidate_new = generate_walk(W, G, expectedfitness, machinenumber)
+        if candidate_new[1] < candidate_old[1]:
+            candidate_old = candidate_new
+            expectedfitness = candidate_old[1]
+            iteration = i
+            table.append([iteration, expectedfitness, machinenumber, candidate_old[0]])
+
+    with open('penaltyscoutlog.csv', 'w') as csvfile:
+        writer = csv.writer(csvfile)
+        [writer.writerow(r) for r in table]
+
+    return [iteration, candidate_old]
+
 if __name__ == '__main__':
+
+    G = manual_map_one()
+    W = [0]
 
     temp = G.edges(None, True)
     totallength = 0
@@ -168,22 +203,18 @@ if __name__ == '__main__':
      if they are covered we should send them both home along the shortest path """
 
     machinenumber = 1
-    candidate_old = generate_walk(W, G, machinenumber)
+
     iteration = 0
     N = 1000
-    for i in range(N):
 
-        candidate_new = generate_walk(W, G, machinenumber)
-        if candidate_new[1] < candidate_old[1]:
-            candidate_old = candidate_new
-            iteration = i
+    candidate = start_penalty_scout(W, G, N, machinenumber)
 
     print('END OF PROCESS, possible optimum is:')
-    print(candidate_old[1])
+    print(candidate[1])
     print('at iteration number:')
     print(iteration)
     print('Shortest mashine path')
-    print(len(candidate_old[0][0]))
+    print(len(candidate[0][0]))
 
     file = open('solution.txt', 'w')
     file.truncate()
