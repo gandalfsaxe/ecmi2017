@@ -43,7 +43,7 @@ G = manual_map_one()
 W = [0]
 
 
-def valuevertex(A, Walk):
+def valuevertex(A, Walk, graph, penalty):
     """return value of vertex"""
     quality_A = 0
 
@@ -54,15 +54,15 @@ def valuevertex(A, Walk):
 
     # length of the path
     now = Walk[-1]
-    # quality_A += G[now][A]['length']
+    quality_A += G[now][A]['length']# * graph[now][A]['visits']
 
     # number of visits of the path
-    quality_A += 50*G[now][A]['visits']
+    quality_A += 2 * penalty * graph[now][A]['visits']
 
     return quality_A
 
 
-def nextpoint(walk, graph):
+def nextpoint(walk, graph, penalty):
         """this function delivers a decision for the next point to go, looking at the graph and the walk"""
         nodenow = walk[-1]
         points = graph.neighbors(nodenow)
@@ -71,7 +71,7 @@ def nextpoint(walk, graph):
             i = 0
             # connect value to every point
             while i < len(points):
-                points[i] = [points[i], valuevertex(points[i], walk)]
+                points[i] = [points[i], valuevertex(points[i], walk, graph, penalty)]
                 i += 1
             # sort the list of points by the value connected
             points.sort(key=lambda x: x[1])
@@ -82,9 +82,7 @@ def nextpoint(walk, graph):
         # now decide which point should be next, with highest chance for best point and lowest chance for worst point
         borders = range(1, len(points) + 1)[::-1] # e.g. for 3 points gives [3,2,1]
 
-        borders[0] *= 5
-        # s = pd.Series(borders)
-        # borders = ((s * 10).tolist())
+        borders[0] *= 10
 
         # generate a random number to decide which point to go to
         r_n = random.uniform(0, 1) * sum(borders)
@@ -109,55 +107,93 @@ def my_endwhile(walk, list):
             return True
         else: return False
 
-def generate_walk(start, graph):
+
+def generate_walk(start, graph, machines = 1):
 
     """this function generates a walk through the graph with given start point
     start point is also ending point
 
     output is the generated walk and the fitness as a list"""
-    g = graph
-    walk = start
+    g = graph.copy()
+    walk = [start] * machines
+    finished = [False] * machines
     fitness = 0
     listofedges = graph.edges()
 
+    final_walk = []
     # repeat the iteration until the graph is fully covered and current position is starting position
-    while not my_endwhile(walk, listofedges):
-        now = walk[-1]
-        next_vert = nextpoint(walk, g)
-        walk.append(next_vert)
-        try:
-            g.edge[now][next_vert]['visits'] += 1
-            fitness += g.edge[now][next_vert]['length']
-        except:
-            g.edge[next_vert][now]['visits'] += 1
-            fitness += g.edge[next_vert][now]['length']
-        try:
-            listofedges.remove((next_vert, now))
-        except:
-            fitness += 0
-        try:
-            listofedges.remove((now, next_vert))
-        except:
-            fitness += 0
+    while len(finished) != 0:
 
-    return [walk, fitness]
+        for i in range(len(walk)):
+    # while not my_endwhile(walk, listofedges):
+            walk_machine = walk[i][:]
+            now = walk_machine[-1]
+            next_vert = nextpoint(walk_machine, g, len(listofedges))
+            walk_machine.append(next_vert)
+            try:
+                g.edge[now][next_vert]['visits'] += 1
+                fitness += g.edge[now][next_vert]['length']
+            except:
+                g.edge[next_vert][now]['visits'] += 1
+                fitness += g.edge[next_vert][now]['length']
+            try:
+                listofedges.remove((next_vert, now))
+            except:
+                fitness += 0
+            try:
+                listofedges.remove((now, next_vert))
+            except:
+                fitness += 0
+            walk[i] = walk_machine
+            if my_endwhile(walk_machine, listofedges):
+                final_walk.append(walk_machine)
+                walk.remove(walk[i])
+                finished = finished[1:]
+                break
+
+
+    return [final_walk, fitness, machines]
 
 
 if __name__ == '__main__':
 
+    temp = G.edges(None, True)
+    totallength = 0
+    for i in temp:
+        totallength += i[2]['length']
 
-    candidate_old = generate_walk(W, G)
+    print(totallength)
+
+    """with multiple machines it is important to look at the covered streets every step,
+     if they are covered we should send them both home along the shortest path """
+
+    machinenumber = 1
+    candidate_old = generate_walk(W, G, machinenumber)
     iteration = 0
     N = 1000
     for i in range(N):
-        candidate_new = generate_walk(W, G)
+
+        candidate_new = generate_walk(W, G, machinenumber)
         if candidate_new[1] < candidate_old[1]:
             candidate_old = candidate_new
             iteration = i
+
     print('END OF PROCESS, possible optimum is:')
     print(candidate_old[1])
     print('at iteration number:')
     print(iteration)
+    print('Shortest mashine path')
+    print(len(candidate_old[0][0]))
+
+    file = open('solution.txt', 'w')
+    file.truncate()
+    file.write('Number of iterations tested: ' + str(N) + "\n")
+    file.write('Fitness of solution found: ' + str(candidate_old[1]) + "\n")
+    file.write('Path to follow is: ' + "\n")
+    file.write(str(candidate_old[0]))
+
+    file.close()
+
 
 
 
