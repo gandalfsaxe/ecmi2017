@@ -206,15 +206,15 @@ if __name__ == '__main__':
     """with multiple machines it is important to look at the covered streets every step,
      if they are covered we should send them both home along the shortest path """
 
-    machinenumber = 1
+    machinenumber = 2
 
-    N = 100000
+    N = 10000
 
     candidate = start_penalty_scout(W, G, N, machinenumber)
     iteration = candidate[0]
 
     print('END OF PROCESS, possible optimum is:')
-    print(candidate[1])
+    print(str(candidate[1][0]) + "\n" + str(candidate[1][1]) + "\n")
     print('at iteration number:')
     print(iteration)
 

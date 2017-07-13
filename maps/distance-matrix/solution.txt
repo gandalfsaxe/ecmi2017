@@ -1,4 +1,4 @@
 Number of iterations tested: 10000
-Fitness of solution found: 33.0835
+Fitness of solution found: 41.7015
 Path to follow is: 
-7415
+9413
