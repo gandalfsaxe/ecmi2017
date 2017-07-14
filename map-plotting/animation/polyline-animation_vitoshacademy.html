@@ -1,0 +1,99 @@
+<html>
+<head>
+    <script 
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCl_U7ctGUodLktDtw-o4Q1tUA3g8c5e70&sensor=false">
+    </script>
+    <style type="text/css">
+        html { height: 100% }
+        body { height: 100%; margin: 5; }
+        #mapDiv { width: 100%; height: 100%; }
+    </style>
+    <!-- Map creation is here -->
+    <script>
+        //Defining map as a global variable to access from other functions
+        var map;
+        var polyline;
+ 
+        var lineCoordinates = [
+           [44.0715858,27.2454436],[43.83531,25.9752809],
+           [43.0840727,25.6331224],[42.6954322,23.3239467],
+           [52.3747157,4.8986167],[51.2384547,6.8143503]
+        ];
+ 
+        function addAnimatedPolyline () {
+            //First we iterate over the coordinates array to create a
+            // new array which includes objects of LatLng class.
+            var pointCount = lineCoordinates.length;
+            var linePath = [];
+            for (var i=0; i < pointCount; i++) {
+                var tempLatLng = new google.maps.LatLng(lineCoordinates[i][0], lineCoordinates[i][1]);
+                linePath.push(tempLatLng);
+            }
+ 
+            // Defining arrow symbol
+            var arrowSymbol = {
+                strokeColor: '#070',
+                scale: 3,
+                path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
+            };
+ 
+            // Polyline properties are defined below
+            var lineOptions = {
+                path: linePath,
+                icons: [{
+                    icon: arrowSymbol
+                    //offset: '100%'
+                }],
+                strokeWeight: 3,
+                strokeColor: '#FF0000',
+                strokeOpacity: 0.8
+            }
+            polyline = new google.maps.Polyline(lineOptions);
+ 
+            // Polyline is set to current map
+            polyline.setMap(map);
+ 
+            // Calling the arrow animation function
+            animateArrow();
+        }
+ 
+        function animateArrow() {
+            var counter = 0;
+            var accessVar = window.setInterval(function() {
+                counter = (counter + 1) % 350;
+ 
+                var arrows = polyline.get('icons');
+                arrows[0].offset = (counter / 2) + '%';
+                polyline.set('icons', arrows);
+            }, 50);
+        }
+ 
+        function initMap() {
+            //Enabling new cartography and themes
+            google.maps.visualRefresh = true;
+ 
+            //Setting starting options of map
+            var mapOptions = {
+                center: new google.maps.LatLng(47.5550609,18.5756966),
+                zoom: 6,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+ 
+            //Getting map DOM element
+            var mapElement = document.getElementById('mapDiv');
+ 
+            //Creating a map with DOM element which is just obtained
+            map = new google.maps.Map(mapElement, mapOptions);
+ 
+            addAnimatedPolyline();
+        }
+ 
+        google.maps.event.addDomListener(window, 'load', initMap);
+    </script>
+</head>
+<body>
+    <b>VitoshAcademy.com</b><br/>
+    <b>Travelling from Silistra > Ruse > Veliko Tarnovo > Sofia > Netherlands</b><br/>
+    <div id="mapDiv"></div>
+</body>
+</html>
