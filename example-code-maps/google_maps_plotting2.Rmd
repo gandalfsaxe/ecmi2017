@@ -1,0 +1,99 @@
+---
+title: 'Google Maps'
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+  pdf_document:
+  toc: yes
+---
+## Read in intersection coordinates
+```{r}
+# NOTE: The following path command only works in RStudio, not R (incl. console)
+path <- paste(dirname(rstudioapi::getActiveDocumentContext()$path),"../data/Distance matrix for manual graph/Coordinates.csv", sep="/")
+intersectionCoords <- read.csv(path, col.names = c("latitude", "longitude"))
+intersectionCoords
+```
+
+## Route solution
+```{r}
+# Route solution
+routeNodes <- c(0,1,2,3,4,3,5,3,6) # test
+```
+
+## Find route edges
+```{r}
+# Find route edges
+nNodes <- length(routeNodes) # Number of nodes visited, including start/end
+nEdges = nNodes - 1 # Number of edges on route is one less than number of nodes on route
+
+routeEdges <- data.frame(start=c(0), end=c(0))
+
+for (i in seq(nEdges)) {
+  routeEdges[i,1] <- routeNodes[i]
+  routeEdges[i,2] <- routeNodes[i+1]
+}
+routeEdges
+```
+
+## Find route coordinates
+```{r}
+# Find route coordinates
+routeNodeCoords <- data.frame(fromLat=c(0), fromLon=c(0), toLat=c(0), toLon=c(0))
+
+for (i in seq(nEdges)) {
+  routeNodeCoords[i,1] <- intersectionCoords[i,1] # From latitude
+  routeNodeCoords[i,2] <- intersectionCoords[i,2] # From longitude
+  routeNodeCoords[i,3] <- intersectionCoords[i+1,1] # To latitude
+  routeNodeCoords[i,4] <- intersectionCoords[i+1,2] # To longitude
+}
+routeNodeCoords
+```
+
+```{r}
+routeNodeCoords <- head(routeNodeCoords, 3)
+```
+
+```{r}
+# Initialization
+library(googleway)
+key = "AIzaSyC1tadiJ1aZlp7PfZbXcvxJM-MenS2o_ko"
+map_key = "AIzaSyCl_U7ctGUodLktDtw-o4Q1tUA3g8c5e70"
+
+
+routeEdgeCoordsDecoded <- c() # polylines
+routeEdgeCoordsEncoded <- c() # polylines
+N <- dim(routeNodeCoords)[1] # number of loop iterations
+
+for (i in seq(N)) {
+  # Obtain route
+  df <- google_directions(origin = c(routeNodeCoords[i,1], routeNodeCoords[i,2]),
+                          destination = c(routeNodeCoords[i,3], routeNodeCoords[i,4]),
+                          key = key,
+                          mode = "driving",
+                          simplify = TRUE)
+  
+  # Decode route:
+  polyline <- df$routes$overview_polyline$points
+  # routeEdgeCoordsDecoded will be a list of dataframes, but for some reason the individual list elements needs to be converted into dataframe before use
+  routeEdgeCoordsDecoded <- c(routeEdgeCoordsDecoded, list(data.frame(decode_pl(polyline))))
+  routeEdgeCoordsEncoded <- c(routeEdgeCoordsEncoded, list(data.frame(polyline)))
+}
+
+```
+
+```{r}
+routeEdgeCoordsDecodedMerged <- do.call("rbind", routeEdgeCoordsDecoded)
+```
+
+
+```{r}
+# Plotting of route
+google_map(key = map_key) %>%
+add_polylines(data = routeEdgeCoordsDecodedMerged, lat="lat", lon="lon", stroke_weight = 6, stroke_colour='blue')
+
+# google_map(key = map_key) %>%
+# add_polylines(data = data.frame(routeEdgeCoordsEncoded[1]), polyline = "polyline", stroke_weight = 6, stroke_colour='blue')
+```

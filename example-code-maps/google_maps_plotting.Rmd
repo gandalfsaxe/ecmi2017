@@ -1,0 +1,89 @@
+---
+title: 'Google Maps'
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+  pdf_document:
+  toc: yes
+---
+# Read in edge coordinates
+```{r}
+# NOTE: The following path command only works in RStudio, not R (incl. console)
+path <- paste(dirname(rstudioapi::getActiveDocumentContext()$path),"../data/Distance matrix for manual graph/Coordinates.csv", sep="/")
+coords <- read.csv(path)
+```
+
+```{r}
+lats <- coords[,1]
+lats
+```
+
+```{r}
+lons <- coords[,2]
+lons
+```
+
+```{r}
+testlon1 <- lons[1]
+testlat1 <- lats[1]
+
+testlon2 <- lons[2]
+testlat2 <- lats[2]
+
+testlon3 <- lons[3]
+testlat3 <- lats[3]
+```
+
+
+# Initialization
+```{r}
+library(googleway)
+key = "AIzaSyC1tadiJ1aZlp7PfZbXcvxJM-MenS2o_ko"
+```
+
+# Obtain route
+Directions API return JSON object w. route etc.:
+```{r}
+df1 <- google_directions(origin = c(testlat1, testlon1),
+                        destination = c(testlat2, testlon2),
+                        key = key,
+                        mode = "driving",
+                        simplify = TRUE)
+
+df2 <- google_directions(origin = c(testlat2, testlon2),
+                        destination = c(testlat3, testlon3),
+                        key = key,
+                        mode = "driving",
+                        simplify = TRUE)
+
+# df <- google_directions(origin = "Melbourne, Australia",
+#                         destination = "Sydney, Australia",
+#                         key = key,
+#                         mode = "driving",
+#                         simplify = TRUE)
+```
+
+Decode route:
+```{r}
+pl1 <- df1$routes$overview_polyline$points
+pl2 <- df2$routes$overview_polyline$points
+
+polyline <- "rqxeF_cxsZgr@xmCekBhMunGnWc_Ank@vBpyCqjAfbAqmBjXydAe{AoF{oEgTqjGur@ch@qfAhUuiCww@}kEtOepAtdD{dDf~BsgIuj@}tHi{C{bGg{@{rGsmG_bDbW{wCuTyiBajBytF_oAyaI}K}bEkqA{jDg^epJmbB{gC}v@i~D`@gkGmJ_kEojD_O{`FqvCetE}bGgbDm_BqpD}pEqdGiaBo{FglEg_Su~CegHw`Cm`Hv[mxFwaAisAklCuUgzAqmCalJajLqfDedHgyC_yHibCizK~Xo_DuqAojDshAeaEpg@g`Dy|DgtNswBcgDiaAgEqgBozB{jEejQ}p@ckIc~HmvFkgAsfGmjCcaJwwD}~AycCrx@skCwUqwN{yKygH}nF_qAgyOep@slIehDcmDieDkoEiuCg|LrKo~Eb}Bw{Ef^klG_AgdFqvAaxBgoDeqBwoDypEeiFkjBa|Ks}@gr@c}IkE_qEqo@syCgG{iEazAmeBmeCqvA}rCq_AixEemHszB_SisB}mEgeEenCqeDab@iwAmZg^guB}cCk_F_iAmkGsu@abDsoBylBk`Bm_CsfD{jFgrAerB{gDkw@{|EacB_jDmmAsjC{yBsyFaqFqfEi_Ei~C{yAmwFt{B{fBwKql@onBmtCq`IomFmdGueD_kDssAwsCyqDkx@e\\kwEyUstC}uAe|Ac|BakGpGkfGuc@qnDguBatBot@}kD_pBmmCkdAgkB}jBaIyoC}xAexHka@cz@ahCcfCayBqvBgtBsuDxb@yiDe{Ikt@c{DwhBydEynDojCapAq}AuAksBxPk{EgPgkJ{gA}tGsJezKbcAcdK__@uuBn_AcuGsjDwvC_|AwbE}~@wnErZ{nGr_@stEjbDakFf_@clDmKkwBbpAi_DlgA{lArLukCBukJol@w~DfCcpBwnAghCweA}{EmyAgaEbNybGeV}kCtjAq{EveBwuHlb@gyIg\\gmEhBw{G{dAmpHp_@a|MsnCcuGy~@agIe@e`KkoA}lBspBs^}sAmgIdpAumE{Y_|Oe|CioKouFwuIqnCmlDoHamBiuAgnDqp@yqIkmEqaIozAohAykDymA{uEgiE}fFehBgnCgrGmwCkiLurBkhL{jHcrGs}GkhFwpDezGgjEe_EsoBmm@g}KimLizEgbA{~DwfCwvFmhBuvBy~DsqCicBatC{z@mlCkkDoaDw_BagA}|Bii@kgCpj@}{E}b@cuJxQwkK}j@exF`UanFzM{fFumB}fCirHoTml@CoAh`A"
+decoded <- decode_pl(polyline)
+head(decoded)
+```
+
+# Plotting of route
+```{r}
+map_key = "AIzaSyCl_U7ctGUodLktDtw-o4Q1tUA3g8c5e70"
+
+df1 <- data.frame(polyline = pl1)
+df2 <- data.frame(polyline = pl2)
+
+google_map(key = map_key) %>%
+  add_polylines(data = df3 , polyline = "polyline", stroke_weight = 9, stroke_colour='red')
+```
+

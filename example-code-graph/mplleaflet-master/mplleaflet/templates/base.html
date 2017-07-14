@@ -1,20 +1,24 @@
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+  {% for link in links %}
+    {{link.render(embedded=embed_links)}}
+  {% endfor %}
   <style>
-    #mapa17ceaeece8641209cc86ad0dfc6750d {
+    {% block style %}
+    #map{{ mapid }} {
       height:100%;
     }
+    {% endblock %}
   </style> 
 </head>
 <body>
-  <div id="mapa17ceaeece8641209cc86ad0dfc6750d"></div>
+  <div id="map{{ mapid }}"></div>
 <script text="text/javascript">
-var map = L.map('mapa17ceaeece8641209cc86ad0dfc6750d');
+{% block script_main %}
+var map = L.map('map{{ mapid }}');
 L.tileLayer(
-  "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  {maxZoom:19, attribution: '<a href="https://github.com/jwass/mplleaflet">mplleaflet</a> | Map data (c) <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'}).addTo(map);
-var gjData = {"features": [], "type": "FeatureCollection"};
+  "{{ tile_url }}",
+  {maxZoom:19, attribution: '{{ attribution }}'}).addTo(map);
+var gjData = {{ geojson }};
 
 if (gjData.features.length != 0) {
   var gj = L.geoJson(gjData, {
@@ -35,5 +39,6 @@ if (gjData.features.length != 0) {
 } else {
   map.setView([0, 0], 1);
 }
+{% endblock %}
 </script>
 </body>
