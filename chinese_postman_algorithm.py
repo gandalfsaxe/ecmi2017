@@ -159,12 +159,12 @@ def matching_algorithm_efficient(odd_node_list, odd_node_pairing_distance):
     minimizing the weights. Uses original formulation from Edmund and Johnson's '''
     dense_odd_node_graph = create_dense_graph(odd_node_list, odd_node_pairing_distance)
     
-    ####### SAVE ODD NODE DISTANCE MATRIX #######
-
-    dense_distance_matrix = nx.to_numpy_matrix(dense_odd_node_graph, weight='length')
-    np.savetxt("dense_graph.csv", dense_distance_matrix, delimiter=",")    
-
-    ####### SAVE ODD NODE DISTANCE MATRIX #######
+#    ####### SAVE ODD NODE DISTANCE MATRIX #######
+#
+#    dense_distance_matrix = nx.to_numpy_matrix(dense_odd_node_graph, weight='length')
+#    np.savetxt("dense_graph.csv", dense_distance_matrix, delimiter=",")    
+#
+#    ####### SAVE ODD NODE DISTANCE MATRIX #######
 
     
     optimal_odd_node_matching = Get_Min_Weight_Matching(dense_odd_node_graph)
@@ -219,7 +219,7 @@ def find_optimal_graph_extension(graph, odd_node_list, odd_node_pairing_distance
     total_graph_distance = sum(dict_of_graph_distances.values())
     least_total_distance = total_graph_distance + best_pair_total_distance
     
-    print total_graph_distance, best_pair_total_distance
+#    print total_graph_distance, best_pair_total_distance
     
     backtracked_edges = []
     for node1, node2 in best_pair_list:
@@ -249,7 +249,7 @@ def get_all_possible_pairings(node_list, remove1, remove2):
         return list(itertools.combinations(node_list,2))
 
     
-def solve_chinese_postman_problem(graph, start=None, end=None, matching_algorithm = 'efficient'):
+def solve_chinese_postman_problem(graph, start=None, end=None, matching_algorithm = 'efficient', is_multigraph = False):
     ''' Solves the chinese postman problem using the classical solution.
     'Efficient' algorithm uses Edmund and Johnson's solution (1976) to find optimal edges to be added.
     'Original' tries all possible edge combinations and selects the smallest one (slow) '''
@@ -292,8 +292,11 @@ def solve_chinese_postman_problem(graph, start=None, end=None, matching_algorith
     graph_extended = nx.MultiGraph(graph)
     for node1,node2 in backtracked_edges:
         graph_extended.add_edge(node1, node2, attr_dict = {'length': graph[node1][node2]['length']})
-      
-    path = find_eulerian_path_same_startend(graph_extended, start)
+     
+    if start == end:
+        path = find_eulerian_path_same_startend(graph_extended, start)
+    else:
+        path = find_eulerian_path_different_startend(graph_extended, start, end)
             
     check_distance = 0
     prev_node = start
@@ -302,41 +305,104 @@ def solve_chinese_postman_problem(graph, start=None, end=None, matching_algorith
         prev_node = node
 
     if least_total_distance < check_distance:
-        print least_total_distance
-        print 'WARNING: PATH OF FINAL DISTANCE IS NOT OPTIMAL'
-        
-    if len(path)-1 < graph_extended.number_of_edges():
+        diff = check_distance - least_total_distance
+        #To avoid floating point errors, only consider it a problem if the difference is more than 1% the least distance
+        if float(diff)/least_total_distance > 0.01:
+            print 'WARNING: PATH OF FINAL DISTANCE IS NOT OPTIMAL, TRAVELLED %.3f MORE' %diff
+    
+    check_path = check_solution(graph, path)
+    if check_path == False:
         print 'WARNING: NOT ALL EDGES HAVE BEEN VISITED'
+    
+    if is_multigraph == True:
+        # Modify duplicated nodes
+        node_type = type(path[0])
+        new_path = []
+        for node in path:
+            if type(node) == str:
+                if "\'" in node:
+                    node = node.replace("\'", "")
+                    node = node_type(node)
+            if len(new_path) > 0 and node == new_path[-1]:
+                continue
+            new_path.append(node)
+        path = new_path
 
     return least_total_distance, path
     
+def check_solution(graph, path):
+    ''' Check if the path is a solution of the graph '''
+    edges = graph.edges()
+    for ind in range(len(path[:-1])):
+        edge = (path[ind], path[ind+1])
+        
+        try:
+            edges.remove(edge)
+        except ValueError:
+            pass
+        
+        try:
+            edges.remove(edge[::-1])
+        except ValueError:
+            pass
+        
+    is_correct = False
+    if len(edges) == 0:
+        is_correct = True
+    else:
+        print 'missed edges', edges
+    return is_correct
+        
+
+def check_solution_two_way(graph, path):
+    ''' Check if a normal graph has every edge crossed twice '''
+    edges = graph.edges()*2
+    for ind in range(len(path[:-1])):
+        edge = (path[ind], path[ind+1])
+        
+        
+        try:
+            edges.remove(edge)
+        except ValueError:
+            pass
+        
+        try:
+            edges.remove(edge[::-1])
+        except ValueError:
+            pass
+        
+    is_correct = False
+    if len(edges) == 0:
+        is_correct = True
+    else:
+        print 'missed edges', edges
+    return is_correct
+            
+    
 
 def main():
-#    graph = example_graphs.create_test_array()
-#    graph = example_graphs.create_test_array_with_dead_end()
-#    print solve_chinese_postman_problem(graph, start=1, end=1, matching_algorithm='efficient')
+    is_multigraph = False
+    
+#    graph = example_graphs.create_test_array(); start = 1; end = 1
+#    graph = example_graphs.create_test_array_with_dead_end(); start = 1; end = 1
 
-#    graph = example_graphs.create_test_array_notebook()
-#    graph = example_graphs.create_test_array_worked_example_33()
-#    example_graphs.draw_network_with_labels(graph)
-#    node_order = add_node_order_to_graph(graph)
-#    print solve_chinese_postman_problem(graph, start='A', end='A', matching_algorithm='efficient')
+#    graph = example_graphs.create_test_array_notebook(); start = 'A'; end = 'H'
+    graph = example_graphs.create_test_array_worked_example_33(); start = 'A'; end = 'A'
 
-
-#    print solve_chinese_postman_problem(graph, start=0, end=0)
-
-    graph = example_graphs.manual_map_one()
-    print solve_chinese_postman_problem(graph, start=0, end=0, matching_algorithm='efficient')
+#    graph = example_graphs.manual_map_one(); start = 0; end = 0
 #    print calculate_distance(graph, [0, 1, 6, 8, 7, 11, 14, 18, 21, 20, 13, 12, 10, 12, 17, 20, 13, 14, 18, 15, 19, 22, 23, 21, 18, 15, 11, 7, 5, 6, 8, 9, 16, 19, 22, 16, 9, 3, 4, 3, 2, 1, 0])
+#    
+#    graph = example_graphs.create_test_array_multigraph(); start='A'; end = 'A'; is_multigraph=True
+#    graph = example_graphs.manual_map_two_way(); start=0; end = 0; is_multigraph=True
 
-#    g = nx.MultiGraph()
-#    g.add_edges_from([(1,2),(2,3),(2,4),(3,5),(4,5),(5,6),(2,3),(3,5)])
-##    g.add_edges_from([(2,3),(3,5)])
-#    example_graphs.draw_network_with_labels(g)
-#    nx.set_edge_attributes(g,'length',1)
-#    print find_eulerian_path_different_startend(g, 1, 6)
-
+    least_total_distance, path = solve_chinese_postman_problem(graph, start=start, end=end, matching_algorithm='efficient', is_multigraph=is_multigraph)
+    print path, least_total_distance
     example_graphs.draw_network_with_labels(graph)
+    
+#    print check_solution_two_way(example_graphs.manual_map_one(), path)
+    
+#    print calculate_distance(example_graphs.manual_map_one(), [0, 1, 2, 1, 6, 8, 7, 11, 14, 13, 12, 17, 20, 17, 12, 13, 14, 18, 21, 20, 13, 20, 21, 23, 22, 19, 15, 18, 14, 13, 12, 10, 12, 13, 12, 17, 20, 13, 14, 11, 15, 19, 15, 11, 7, 8, 9, 3, 4, 3, 2, 3, 9, 16, 19, 22, 23, 21, 18, 15, 19, 16, 22, 16, 9, 8, 6, 5, 7, 5, 6, 1, 0])
+#    print check_solution_two_way(example_graphs.manual_map_one(), [0, 1, 2, 1, 6, 8, 7, 11, 14, 13, 12, 17, 20, 17, 12, 13, 14, 18, 21, 20, 13, 20, 21, 23, 22, 19, 15, 18, 14, 13, 12, 10, 12, 13, 12, 17, 20, 13, 14, 11, 15, 19, 15, 11, 7, 8, 9, 3, 4, 3, 2, 3, 9, 16, 19, 22, 23, 21, 18, 15, 19, 16, 22, 16, 9, 8, 6, 5, 7, 5, 6, 1, 0])
 
     
 
@@ -347,3 +413,13 @@ if __name__ == '__main__':
     tt = time.time()
     main()
     print 'Ellapsed time: %.4f seconds' %(time.time() - tt)
+    
+    
+    
+    
+#    g = nx.MultiGraph()
+#    g.add_edges_from([(1,2),(2,3),(2,4),(3,5),(4,5),(5,6),(2,3),(3,5)])
+##    g.add_edges_from([(2,3),(3,5)])
+#    example_graphs.draw_network_with_labels(g)
+#    nx.set_edge_attributes(g,'length',1)
+#    print find_eulerian_path_different_startend(g, 1, 6)
