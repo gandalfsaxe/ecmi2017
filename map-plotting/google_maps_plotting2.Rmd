@@ -13,14 +13,18 @@ output:
 ```{r}
 # NOTE: The following path command only works in RStudio, not R (incl. console)
 path <- paste(dirname(rstudioapi::getActiveDocumentContext()$path),"../data/Distance matrix for manual graph/Coordinates.csv", sep="/")
-intersectionCoords <- read.csv(path, col.names = c("latitude", "longitude"))
+intersectionCoords <- read.csv(path, col.names = c("latitude", "longitude"), header=FALSE)
 intersectionCoords
 ```
 
 ## Route solution
 ```{r}
 # Route solution
-routeNodes <- c(0,1,2,3,4,3,5,3,6) # test
+# routeNodes <- c(0,1,2,3,4,3,5,3,6) # test
+
+routeNodes <- c(0, 1, 6, 8, 7, 11, 14, 13, 20, 21, 20, 17, 12, 10, 12, 13, 14, 18, 15, 19, 22, 23, 21, 18, 15, 11, 7, 5, 6, 8, 9, 16, 19, 22, 16, 9, 3, 4, 3, 2, 1, 0)
+
+routeNodes <- routeNodes + 1 # since R is 1-indexed, we'll need this in a loop later
 ```
 
 ## Find route edges
@@ -41,19 +45,22 @@ routeEdges
 ## Find route coordinates
 ```{r}
 # Find route coordinates
-routeNodeCoords <- data.frame(fromLat=c(0), fromLon=c(0), toLat=c(0), toLon=c(0))
+routeEdgeCoords <- data.frame(fromLat=c(0), fromLon=c(0), toLat=c(0), toLon=c(0))
 
 for (i in seq(nEdges)) {
-  routeNodeCoords[i,1] <- intersectionCoords[i,1] # From latitude
-  routeNodeCoords[i,2] <- intersectionCoords[i,2] # From longitude
-  routeNodeCoords[i,3] <- intersectionCoords[i+1,1] # To latitude
-  routeNodeCoords[i,4] <- intersectionCoords[i+1,2] # To longitude
+  j = routeNodes[i]
+  k = routeNodes[i+1]
+  routeEdgeCoords[i,1] <- intersectionCoords[j,1] # From latitude
+  routeEdgeCoords[i,2] <- intersectionCoords[j,2] # From longitude
+  routeEdgeCoords[i,3] <- intersectionCoords[k,1] # To latitude
+  routeEdgeCoords[i,4] <- intersectionCoords[k,2] # To longitude
 }
-routeNodeCoords
+routeEdgeCoords
 ```
 
 ```{r}
-routeNodeCoords <- head(routeNodeCoords, 3)
+# Test mode, only takes the first 3 edges
+# routeEdgeCoords <- head(routeEdgeCoords, 3)
 ```
 
 ```{r}
@@ -65,12 +72,12 @@ map_key = "AIzaSyCl_U7ctGUodLktDtw-o4Q1tUA3g8c5e70"
 
 routeEdgeCoordsDecoded <- c() # polylines
 routeEdgeCoordsEncoded <- c() # polylines
-N <- dim(routeNodeCoords)[1] # number of loop iterations
+N <- dim(routeEdgeCoords)[1] # number of loop iterations
 
 for (i in seq(N)) {
   # Obtain route
-  df <- google_directions(origin = c(routeNodeCoords[i,1], routeNodeCoords[i,2]),
-                          destination = c(routeNodeCoords[i,3], routeNodeCoords[i,4]),
+  df <- google_directions(origin = c(routeEdgeCoords[i,1], routeEdgeCoords[i,2]),
+                          destination = c(routeEdgeCoords[i,3], routeEdgeCoords[i,4]),
                           key = key,
                           mode = "driving",
                           simplify = TRUE)
@@ -97,3 +104,13 @@ add_polylines(data = routeEdgeCoordsDecodedMerged, lat="lat", lon="lon", stroke_
 # google_map(key = map_key) %>%
 # add_polylines(data = data.frame(routeEdgeCoordsEncoded[1]), polyline = "polyline", stroke_weight = 6, stroke_colour='blue')
 ```
+
+{lat: 22.291, lng: 153.027}, {lat: 18.291, lng: 153.027}]
+
+```{r}
+# Export merged polyline to csv
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+write.csv(routeEdgeCoordsDecodedMerged, file = "route.csv", row.names = FALSE)
+```
+
