@@ -389,7 +389,7 @@ def main():
 #    graph = example_graphs.create_test_array_notebook(); start = 'A'; end = 'H'
     graph = example_graphs.create_test_array_worked_example_33(); start = 'A'; end = 'A'
 
-#    graph = example_graphs.manual_map_one(); start = 0; end = 0
+    graph = example_graphs.manual_map_one(); start = 0; end = 0
 #    print calculate_distance(graph, [0, 1, 6, 8, 7, 11, 14, 18, 21, 20, 13, 12, 10, 12, 17, 20, 13, 14, 18, 15, 19, 22, 23, 21, 18, 15, 11, 7, 5, 6, 8, 9, 16, 19, 22, 16, 9, 3, 4, 3, 2, 1, 0])
 #    
 #    graph = example_graphs.create_test_array_multigraph(); start='A'; end = 'A'; is_multigraph=True

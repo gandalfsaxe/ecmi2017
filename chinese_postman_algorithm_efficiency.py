@@ -43,11 +43,13 @@ def main():
     graph = generate_random_graph(5)   
     
     sizes = 10.**np.linspace(1.,2.,10)
-    sizes = [125]
+    sizes = np.linspace(10,500,50)
+#    sizes = [125]
 #    sizes = [10,20,30,40,50]
-    reps = 1 #Times each size is repeated
+    reps = 15 #Times each size is repeated
     times = []
     for size in sizes:
+        print size
         
         av_time = 0.    
         
@@ -66,18 +68,10 @@ def main():
             av_time += ellapsed_time
         av_time /= reps
         times.append(av_time)
-        
-#        example_graphs.draw_network_with_labels(graph)
-#        plt.figure(2)
-#        nx.draw_circular(graph)
-#        plt.figure(1)
-    
-#    xx = np.linspace(sizes[0], sizes[-1], 1000)
-#    yy = xx**3   
-#    plt.plot(xx, yy, 'r--')
 
+    fsize = 22
     
-    plt.plot(sizes, times, label = 'Computational times')
+    plt.plot(sizes, times, 'o', ms= 12, label = 'Averaged computational time')
 
     #Polynomial fitting    
     sizes = np.array(sizes)
@@ -93,17 +87,17 @@ def main():
     print 'r2 score', r2
     print regr.named_steps['linearregression'].coef_
 
-    plt.plot(xx, yy, 'r--', label = '3d degree polyfit, R2 = %.3f' %r2)
-    plt.legend(loc='best')
+    plt.plot(xx, yy, 'r--', lw = 4, label = '3d order polynomial fit, R2 = %.3f' %r2)
+    plt.legend(loc=2, fontsize = fsize/1.2)
     
-    plt.xlabel('Number of nodes')
-    plt.ylabel('Time (s)')
+    plt.tick_params(labelsize=fsize)
+    plt.xlabel('Number of nodes',fontsize = fsize)
+    plt.ylabel('Time (s)', fontsize = fsize)
 
 
     
     
     
-    plt.show()
         
         
     
@@ -119,3 +113,5 @@ if __name__ == '__main__':
     ttt = time.time()
     main()
     print 'Ellapsed time: %.2f seconds' %(time.time() - ttt)
+    plt.show()
+
