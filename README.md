@@ -51,21 +51,15 @@ Total travel distance: 30.5275 km
 # The Team
 Team Lambda:
 Albert Miguel López
-amiguello2@gmail.com
 
 Carl Assmann
-carlassmann@me.com
 
 Edyta Kabat
-pisac.na.wodzie@gmail.com
 
 Gandalf Saxe:
-gandalfsaxe@gmail.com
 
 Matthew Geleta
-matthewgeleta@gmail.com
 
 Sara Battiston
-sarabattiston314@gmail.com
 
 
