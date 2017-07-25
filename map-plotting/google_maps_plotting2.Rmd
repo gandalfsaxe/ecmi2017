@@ -9,6 +9,9 @@ output:
   pdf_document:
   toc: yes
 ---
+
+NOTE: remember ot insert a valid Google Maps Directions API key below!
+
 ## Read in intersection coordinates
 ```{r}
 # NOTE: The following path command only works in RStudio, not R (incl. console)
@@ -69,7 +72,7 @@ routeEdgeCoords
 ```{r}
 # Initialization
 library(googleway)
-key = "AIzaSyC1tadiJ1aZlp7PfZbXcvxJM-MenS2o_ko"
+key = "INSERT-KEY-HERE" # Google Maps Directions API
 map_key = "AIzaSyCl_U7ctGUodLktDtw-o4Q1tUA3g8c5e70"
 
 

@@ -8,7 +8,7 @@ This README serves two functions:
 1. Show our results
 2. Document how to use the code.
 
-The second point is especially crucial because we had just 5 days to work this problem; there was no time to make the code structured or pretty. This README therefore serves as a guide for using the code, the following not-so-pretty workflows of obtaining road graph data, obtaining route solutions and visualizing them using Google Maps API.
+The second point is especially crucial because we had just 5 days to work this problem; there was no time to make the code structured or pretty.
 
 # Introduction
 
@@ -40,6 +40,7 @@ Total travel distance: 30.5275 km
 
 
 # 2. Code documentation (HOW-TO guides)
+Due to the time constraints, the following is a series of not-so-pretty, but functional workflows of obtaining road graph data, obtaining route solutions and visualizing them using Google Maps API.
 
 ## How to obtain graph of road network
 
