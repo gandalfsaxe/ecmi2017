@@ -25,6 +25,16 @@ And in summary we found:
 3. **Visualizing solution**: We used the [Google Maps Javascript API](https://developers.google.com/maps/documentation/javascript/) to animate a symbol on the maps (luckily Google had provided a some [nice sample code](https://developers.google.com/maps/documentation/javascript/examples/overlay-symbol-animate)). This could be done after the solution was converted from a list of nodes to a list of (latitude, longitude) coordinates, using the Google Maps Directions API
 
 # 1. Problem and results
+The total length of all the edges in our (one-way) graph is 24.2355 km.
+However, since it's not Eulerian, this distance is not achieveable and the snowplower would have to travel a longer distance. We found the theoretical lower bound of a solution to be 30.5275 km, which is exactly what both algorithms found.
+
+## Optimal solver
+![Alberithm solution](https://github.com/GandalfSaxe/ecmi2017/blob/master/map-plotting/animation/animation-videos/final-animation-videos/alberithm.gif?raw=true)
+Total travel distance: 30.5275 km
+
+## Stochastic solver
+![Carlgorithm solution](https://github.com/GandalfSaxe/ecmi2017/blob/master/map-plotting/animation/animation-videos/final-animation-videos/carlgorithm.gif?raw=true)
+Total travel distance: 30.5275 km
 
 
 # 2. Code documentation (HOW-TO guides)
