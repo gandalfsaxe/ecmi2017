@@ -5,7 +5,7 @@
 Project Lambda was about optimization of snow plowing operations in Skinnarila area near Lappeenranta. We wanted to minimize the distance travelled by the snow plowing vehicles, and if possible, prioritize roads differently.
 
 
-**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+**Table of Contents**
 
 - [Introduction](#introduction)
 - [1. Problem and results](#1-problem-and-results)
