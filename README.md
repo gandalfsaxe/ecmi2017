@@ -64,7 +64,14 @@ Due to the time constraints, the following is a series of not-so-pretty, but fun
 Coming soon...
 
 ## Obtain solutions for efficient routes
-Coming soon...
+
+### Find optimal route using Penalty scout algorithm
+All code you need for finding a solution with our Penalty Scout Algorithm is within the Penalty_Scout_Algorithm.py file.
+1. Create graph with the manual_map_one function, which is calling a CSV distance matrix. (If needed, add attributes such as visits within the function loop)
+2. Within the valuevertex function you can change which characteristics increase the value (our penalty).
+3. Within the nextpoint function the borders variable is representing probabilities for each element. Change several entries, if lower or higher probabilities are wanted.
+4. Choose, how many iterations you want to try and call the start_penalty_scout function. It will return the best candidate of all N attempts and the iteration number. And it will save a CSV-file containing all improvements and paths.
+5. Best path found will be last entry in the saved penaltyscoutlog.csv file.
 
 ## Convert list of nodes into list of coordinates
 1. Open `map-plotting/google_maps_plotting2.Rmd` (using RStudio).

@@ -12,30 +12,29 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Penalty_Scout_Algorithm.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Penalty_Scout_Algorithm.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Penalty_Scout_Algorithm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1500">
-              <caret line="241" column="20" lean-forward="false" selection-start-line="241" selection-start-column="20" selection-end-line="241" selection-end-column="20" />
+            <state relative-caret-position="2280">
+              <caret line="203" column="34" lean-forward="false" selection-start-line="203" selection-start-column="34" selection-end-line="203" selection-end-column="34" />
               <folding>
                 <element signature="e#100#121#0" expanded="true" />
-                <element signature="e#189#573#1" expanded="false" />
-                <element signature="e#634#1084#0" expanded="false" />
-                <element signature="e#1113#1436#0" expanded="false" />
-                <element signature="e#1485#1873#0" expanded="false" />
-                <element signature="e#1921#3088#0" expanded="false" />
-                <element signature="e#3124#3531#0" expanded="false" />
-                <element signature="e#3622#6025#0" expanded="false" />
+                <element signature="e#213#597#1" expanded="false" />
+                <element signature="e#658#1108#0" expanded="false" />
+                <element signature="e#1137#1460#0" expanded="false" />
+                <element signature="e#1509#1897#0" expanded="false" />
+                <element signature="e#3148#3555#0" expanded="false" />
+                <element signature="e#7998#8398#1" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Penalty_Scout_Algorithm2.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Penalty_Scout_Algorithm2.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Penalty_Scout_Algorithm2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
-              <caret line="240" column="10" lean-forward="false" selection-start-line="240" selection-start-column="10" selection-end-line="240" selection-end-column="10" />
+            <state relative-caret-position="825">
+              <caret line="241" column="21" lean-forward="false" selection-start-line="241" selection-start-column="21" selection-end-line="241" selection-end-column="21" />
               <folding>
                 <element signature="e#179#563#1" expanded="false" />
                 <element signature="e#1128#1451#0" expanded="false" />
@@ -44,28 +43,6 @@
                 <element signature="e#3457#3864#0" expanded="false" />
                 <element signature="e#3955#6521#0" expanded="false" />
                 <element signature="e#6605#7999#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="checkintersection.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/checkintersection.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="evaluate_intersection.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/evaluate_intersection.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="117" column="32" lean-forward="false" selection-start-line="117" selection-start-column="32" selection-end-line="117" selection-end-column="32" />
-              <folding>
-                <element signature="e#279#3919#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -81,6 +58,9 @@
     </option>
   </component>
   <component name="FindInProjectRecents">
+    <findStrings>
+      <find>edges</find>
+    </findStrings>
     <replaceStrings>
       <replace />
     </replaceStrings>
@@ -91,8 +71,8 @@
         <option value="$PROJECT_DIR$/getneighbours.py" />
         <option value="$PROJECT_DIR$/Tryhalfrandompaths.py" />
         <option value="$PROJECT_DIR$/Priority_Greedy_Algorithm.py" />
-        <option value="$PROJECT_DIR$/Penalty_Scout_Algorithm.py" />
         <option value="$PROJECT_DIR$/Penalty_Scout_Algorithm2.py" />
+        <option value="$PROJECT_DIR$/Penalty_Scout_Algorithm.py" />
       </list>
     </option>
   </component>
@@ -162,7 +142,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="distance-matrix" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Penalty_Scout_Algorithm2.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Penalty_Scout_Algorithm.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -256,17 +236,15 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25679544" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26752505" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25662652" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25662652" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891566" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891566" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33975902" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -275,6 +253,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -286,12 +265,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Penalty_Scout_Algorithm.py</url>
-          <line>236</line>
+          <line>245</line>
           <option name="timeStamp" value="42" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Penalty_Scout_Algorithm.py</url>
-          <line>143</line>
+          <line>144</line>
           <option name="timeStamp" value="46" />
         </line-breakpoint>
       </breakpoints>
@@ -316,13 +295,122 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#100#121#0" expanded="true" />
-            <element signature="e#189#573#1" expanded="false" />
-            <element signature="e#634#1084#0" expanded="false" />
-            <element signature="e#1113#1436#0" expanded="false" />
-            <element signature="e#1485#1873#0" expanded="false" />
-            <element signature="e#1921#3088#0" expanded="false" />
-            <element signature="e#3124#3531#0" expanded="false" />
-            <element signature="e#3622#6025#0" expanded="false" />
+            <element signature="e#213#597#1" expanded="false" />
+            <element signature="e#658#1108#0" expanded="false" />
+            <element signature="e#1137#1460#0" expanded="false" />
+            <element signature="e#1509#1897#0" expanded="false" />
+            <element signature="e#3148#3555#0" expanded="false" />
+            <element signature="e#7998#8398#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Penalty_Scout_Algorithm2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="825">
+          <caret line="241" column="21" lean-forward="false" selection-start-line="241" selection-start-column="21" selection-end-line="241" selection-end-column="21" />
+          <folding>
+            <element signature="e#179#563#1" expanded="false" />
+            <element signature="e#1128#1451#0" expanded="false" />
+            <element signature="e#1500#2092#0" expanded="false" />
+            <element signature="e#2140#3421#0" expanded="false" />
+            <element signature="e#3457#3864#0" expanded="false" />
+            <element signature="e#3955#6521#0" expanded="false" />
+            <element signature="e#6605#7999#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Penalty_Scout_Algorithm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#100#121#0" expanded="true" />
+            <element signature="e#213#597#1" expanded="false" />
+            <element signature="e#658#1108#0" expanded="false" />
+            <element signature="e#1137#1460#0" expanded="false" />
+            <element signature="e#1509#1897#0" expanded="false" />
+            <element signature="e#3148#3555#0" expanded="false" />
+            <element signature="e#7998#8398#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Penalty_Scout_Algorithm2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="825">
+          <caret line="241" column="21" lean-forward="false" selection-start-line="241" selection-start-column="21" selection-end-line="241" selection-end-column="21" />
+          <folding>
+            <element signature="e#179#563#1" expanded="false" />
+            <element signature="e#1128#1451#0" expanded="false" />
+            <element signature="e#1500#2092#0" expanded="false" />
+            <element signature="e#2140#3421#0" expanded="false" />
+            <element signature="e#3457#3864#0" expanded="false" />
+            <element signature="e#3955#6521#0" expanded="false" />
+            <element signature="e#6605#7999#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Penalty_Scout_Algorithm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3615">
+          <caret line="241" column="20" lean-forward="false" selection-start-line="241" selection-start-column="20" selection-end-line="241" selection-end-column="20" />
+          <folding>
+            <element signature="e#100#121#0" expanded="true" />
+            <element signature="e#213#597#1" expanded="false" />
+            <element signature="e#658#1108#0" expanded="false" />
+            <element signature="e#1137#1460#0" expanded="false" />
+            <element signature="e#1509#1897#0" expanded="false" />
+            <element signature="e#3148#3555#0" expanded="false" />
+            <element signature="e#7998#8398#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/checkintersection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/evaluate_intersection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="117" column="32" lean-forward="false" selection-start-line="117" selection-start-column="32" selection-end-line="117" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Penalty_Scout_Algorithm2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="690">
+          <caret line="232" column="19" lean-forward="true" selection-start-line="232" selection-start-column="19" selection-end-line="232" selection-end-column="19" />
+          <folding>
+            <element signature="e#179#563#1" expanded="false" />
+            <element signature="e#1128#1451#0" expanded="false" />
+            <element signature="e#1500#2092#0" expanded="false" />
+            <element signature="e#2140#3421#0" expanded="false" />
+            <element signature="e#3457#3864#0" expanded="false" />
+            <element signature="e#3955#6521#0" expanded="false" />
+            <element signature="e#6605#7999#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Penalty_Scout_Algorithm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#100#121#0" expanded="true" />
+            <element signature="e#213#597#1" expanded="false" />
+            <element signature="e#658#1108#0" expanded="false" />
+            <element signature="e#1137#1460#0" expanded="false" />
+            <element signature="e#1509#1897#0" expanded="false" />
+            <element signature="e#3148#3555#0" expanded="false" />
+            <element signature="e#7998#8398#1" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -375,9 +463,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="117" column="32" lean-forward="false" selection-start-line="117" selection-start-column="32" selection-end-line="117" selection-end-column="32" />
-          <folding>
-            <element signature="e#279#3919#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -385,31 +470,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Penalty_Scout_Algorithm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1500">
-          <caret line="241" column="20" lean-forward="false" selection-start-line="241" selection-start-column="20" selection-end-line="241" selection-end-column="20" />
-          <folding>
-            <element signature="e#100#121#0" expanded="true" />
-            <element signature="e#189#573#1" expanded="false" />
-            <element signature="e#634#1084#0" expanded="false" />
-            <element signature="e#1113#1436#0" expanded="false" />
-            <element signature="e#1485#1873#0" expanded="false" />
-            <element signature="e#1921#3088#0" expanded="false" />
-            <element signature="e#3124#3531#0" expanded="false" />
-            <element signature="e#3622#6025#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Penalty_Scout_Algorithm2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="240" column="10" lean-forward="false" selection-start-line="240" selection-start-column="10" selection-end-line="240" selection-end-column="10" />
+        <state relative-caret-position="825">
+          <caret line="241" column="21" lean-forward="false" selection-start-line="241" selection-start-column="21" selection-end-line="241" selection-end-column="21" />
           <folding>
             <element signature="e#179#563#1" expanded="false" />
             <element signature="e#1128#1451#0" expanded="false" />
@@ -418,6 +485,22 @@
             <element signature="e#3457#3864#0" expanded="false" />
             <element signature="e#3955#6521#0" expanded="false" />
             <element signature="e#6605#7999#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Penalty_Scout_Algorithm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2280">
+          <caret line="203" column="34" lean-forward="false" selection-start-line="203" selection-start-column="34" selection-end-line="203" selection-end-column="34" />
+          <folding>
+            <element signature="e#100#121#0" expanded="true" />
+            <element signature="e#213#597#1" expanded="false" />
+            <element signature="e#658#1108#0" expanded="false" />
+            <element signature="e#1137#1460#0" expanded="false" />
+            <element signature="e#1509#1897#0" expanded="false" />
+            <element signature="e#3148#3555#0" expanded="false" />
+            <element signature="e#7998#8398#1" expanded="false" />
           </folding>
         </state>
       </provider>

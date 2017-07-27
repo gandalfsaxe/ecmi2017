@@ -7,6 +7,7 @@ import os
 import numpy as np
 import csv
 import time
+import matplotlib as mp
 
 """
 G = nx.Graph()
@@ -211,8 +212,13 @@ def start_penalty_scout(start, graph, N, machinenumber, optimize='length'):
 
 
 if __name__ == '__main__':
-
+    """
     G = manual_map_one()
+    
+"""
+    G = nx.complete_graph(50)
+    nx.set_edge_attributes(G, 'length', 1)  # random.uniform(0, 1))
+    nx.set_edge_attributes(G, 'visits', 0)
     W = [0]
 
     temp = G.edges(None, True)
@@ -226,9 +232,12 @@ if __name__ == '__main__':
     tt = time.time()
 
     machinenumber = 1
+    N = 300
 
     """Calculating optimum for shortest time"""
-    N = 1000000
+
+    """
+    
     valueofinterest = 'time'
 
     candidate = start_penalty_scout(W, G, N, machinenumber, valueofinterest)
@@ -240,6 +249,7 @@ if __name__ == '__main__':
     print(valueofinterest)
     print('at iteration number:')
     print(iteration)
+    """
 
     """Calculating optimum for shortest length"""
 
@@ -258,9 +268,33 @@ if __name__ == '__main__':
     print 'Ellapsed time: %.4f seconds' % (time.time() - tt)
 
 
+"""
+N = 10
 
+timetime = []
+edgesnumber =[]
+for i in range(N-1, N):
+    G = nx.complete_graph(50*i)
+    nx.set_edge_attributes(G, 'length', 1) #random.uniform(0, 1))
+    nx.set_edge_attributes(G, 'visits', 0)
+    times = []
+    for j in range(3):
 
+        tt = time.time()
+        generate_walk([0], G, 100*i*i, 1)
+        times.append((time.time() - tt))
+        if j == 5 and i == 5:
+            nx.draw(G)
+            print(generate_walk([0], G, 100*j*j, 1))
+            print('this actually happened')
+    timetime.append(sum(times)/len(times))
+    edgesnumber.append(len(G.edges()))
 
+print(range(3, N))
+print(timetime)
+print(edgesnumber)
+
+"""
 
 
 
