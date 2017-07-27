@@ -1,6 +1,6 @@
 # ecmi2017
 
-[ECMI Modelling Week 2017](http://www.mafy.lut.fi/ECMIMW2017/) was a mathematics modelling week in Lappeenranta, Finland on July 9th - July 16th 2017. There were 9 teams, one for each of the [problems](http://www.mafy.lut.fi/ECMIMW2017/index.php?page=problems).
+[ECMI Modelling Week 2017](http://www.mafy.lut.fi/ECMIMW2017/) was a mathematics modeling week in Lappeenranta, Finland on July 9th - July 16th 2017. There were 9 teams, one for each of the [problems](http://www.mafy.lut.fi/ECMIMW2017/index.php?page=problems).
 
 Project Lambda was about optimization of snow plowing operations in Skinnarila area near Lappeenranta. We wanted to minimize the distance travelled by the snow plowing vehicles, and if possible, prioritize roads differently.
 
@@ -26,14 +26,18 @@ And in summary we found:
 
 # 1. Problem and results
 The total length of all the edges in our (one-way) graph is 24.2355 km.
-However, since it's not Eulerian, this distance is not achieveable and the snowplower would have to travel a longer distance. We found the theoretical lower bound of a solution to be 30.5275 km, which is exactly what both algorithms found.
+However, since it's not Eulerian, this distance is not achievable and the snowplow would have to travel a longer distance. We found the theoretical lower bound of a solution to be 30.5275 km, which is exactly what both algorithms found.
 
-## Optimal solver
+## Presentation
+
+## Report
+
+### Optimal solver
 ![Alberithm solution](https://github.com/GandalfSaxe/ecmi2017/blob/master/map-plotting/animation/animation-videos/final-animation-videos/alberithm.gif?raw=true)
 
 Total travel distance: 30.5275 km
 
-## Stochastic solver
+### Stochastic solver
 ![Carlgorithm solution](https://github.com/GandalfSaxe/ecmi2017/blob/master/map-plotting/animation/animation-videos/final-animation-videos/carlgorithm.gif?raw=true)
 
 Total travel distance: 30.5275 km
@@ -43,26 +47,21 @@ Total travel distance: 30.5275 km
 Due to the time constraints, the following is a series of not-so-pretty, but functional workflows of obtaining road graph data, obtaining route solutions and visualizing them using Google Maps API.
 
 ## How to obtain graph of road network
-
+Coming soon...
 ## How to obtain solutions for efficient routes
-
+Coming soon...
 ## How to convert list of nodes into list of (latitude, longitude) coordinates
-
+1. Open map-plotting/google_maps_plotting2.Rmd (using RStudio)
+2. 
 ## How to visualize solutions using Google Maps API
 
 
 # The Team
-Team Lambda:
-Albert Miguel López
-
-Carl Assmann
-
-Edyta Kabat
-
-Gandalf Saxe:
-
-Matthew Geleta
-
-Sara Battiston
+[Albert Miguel López](https://github.com/amiguello)  
+[Carl Assmann](https://github.com/carlassmann)  
+[Edyta Kabat](https://github.com/edyta-kabat)  
+[Gandalf Saxe](https://github.com/GandalfSaxe)  
+[Matthew Geleta](https://github.com/MatthewGeleta)  
+[Sara Battiston](https://www.facebook.com/BlackkRoseImmortal)  
 
 
