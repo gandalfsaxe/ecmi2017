@@ -72,8 +72,8 @@ routeEdgeCoords
 ```{r}
 # Initialization
 library(googleway)
-key = "INSERT-KEY-HERE" # Google Maps Directions API
-map_key = "AIzaSyCl_U7ctGUodLktDtw-o4Q1tUA3g8c5e70"
+key = "INSERT KEY HERE" # Google Maps Directions API
+map_key = "INSERT KEY HERE" # Maps JavaScript API
 
 
 routeEdgeCoordsDecoded <- c() # polylines

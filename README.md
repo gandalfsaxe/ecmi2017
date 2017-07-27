@@ -2,15 +2,22 @@
 
 [ECMI Modelling Week 2017](http://www.mafy.lut.fi/ECMIMW2017/) was a mathematics modeling week in Lappeenranta, Finland on July 9th - July 16th 2017. There were 9 teams, one for each of the [problems](http://www.mafy.lut.fi/ECMIMW2017/index.php?page=problems).
 
-Project Lambda was about optimization of snow plowing operations in Skinnarila area near Lappeenranta. We wanted to minimize the distance travelled by the snow plowing vehicles, and if possible, prioritize roads differently.
-
 This README serves two functions:
 1. Show our results
 2. Document how to use the code.
 
-The second point is especially crucial because we had just 5 days to work this problem; there was no time to make the code structured or pretty.
+The second point is especially crucial because we had just 5 days to work this problem; there was no time to make the code structured, pretty or easy to use.
+
+# The Team
+[Albert Miguel López](https://github.com/amiguello)  
+[Carl Assmann](https://github.com/carlassmann)  
+[Edyta Kabat](https://github.com/edyta-kabat)  
+[Gandalf Saxe](https://github.com/GandalfSaxe)  
+[Matthew Geleta](https://github.com/MatthewGeleta)  
+[Sara Battiston](https://www.facebook.com/BlackkRoseImmortal)
 
 # Introduction
+Project Lambda was about optimization of snow plowing operations in Skinnarila area near Lappeenranta. We wanted to minimize the distance travelled by the snow plowing vehicles, and if possible, prioritize roads differently.
 
 The problem turned out to be a variation of the [Chinese Postman Problem](https://en.wikipedia.org/wiki/Route_inspection_problem) (CPP) (a.k.a route inspection problem) on a graph having road intersections as nodes and intersection distances as edges. With this basic model, the problem basically had three parts:
 
@@ -29,18 +36,19 @@ The total length of all the edges in our (one-way) graph is 24.2355 km.
 However, since it's not Eulerian, this distance is not achievable and the snowplow would have to travel a longer distance. We found the theoretical lower bound of a solution to be 30.5275 km, which is exactly what both algorithms found.
 
 ## Presentation
+[Link to presentation (PDF)](https://github.com/GandalfSaxe/ecmi2017/blob/master/presentation/presentation.pdf)  
+[Link to presentation (Overleaf, read-only)](https://www.overleaf.com/read/ywjqndnytwkz)
 
 ## Report
+Coming soon...
 
 ### Optimal solver
-![Alberithm solution](https://github.com/GandalfSaxe/ecmi2017/blob/master/map-plotting/animation/animation-videos/final-animation-videos/alberithm.gif?raw=true)
-
-Total travel distance: 30.5275 km
+<!--![Alberithm solution](https://github.com/GandalfSaxe/ecmi2017/blob/master/map-plotting/animation/animation-videos/final-animation-videos/alberithm.gif?raw=true)  
+-->*Total travel distance: 30.5275 km*
 
 ### Stochastic solver
-![Carlgorithm solution](https://github.com/GandalfSaxe/ecmi2017/blob/master/map-plotting/animation/animation-videos/final-animation-videos/carlgorithm.gif?raw=true)
-
-Total travel distance: 30.5275 km
+<!--![Carlgorithm solution](https://github.com/GandalfSaxe/ecmi2017/blob/master/map-plotting/animation/animation-videos/final-animation-videos/carlgorithm.gif?raw=true) --> 
+*Total travel distance: 30.5275 km*
 
 
 # 2. Code documentation (HOW-TO guides)
@@ -48,20 +56,30 @@ Due to the time constraints, the following is a series of not-so-pretty, but fun
 
 ## How to obtain graph of road network
 Coming soon...
+
 ## How to obtain solutions for efficient routes
 Coming soon...
+
 ## How to convert list of nodes into list of (latitude, longitude) coordinates
-1. Open map-plotting/google_maps_plotting2.Rmd (using RStudio)
-2. 
+1. Open `map-plotting/google_maps_plotting2.Rmd` (using RStudio).
+2. Install R googleway package if you haven't: `install.packages(googleway)`.
+3. Start by inserting two API keys: 1. Copy your [Google Maps Directions API Key](https://developers.google.com/maps/documentation/directions/) into the variable `key` (used to find coordinates of roads between intersections) and the [Maps JavaScript API Key](https://developers.google.com/maps/documentation/javascript/) into the variable `map_key` (used to draw coordinates on a map).
+4. Insert the route solution as a list of nodes in the variable `routeNodes`. For example: `routeNodes <- c(0,1,2,3,4,3,5,3,6)`.
+5. Run the whole script in `google_maps_plotting2.Rmd`. The whole route has now been written into file `route.csv` as a (latitude, longitude) coordinate list, in the same directory.
+6. Run `route-conversion.py`. It's a very simple 16-line python script that converts the (lat,lon) list in `route.csv` into a list format in file `route-lat-lon.txt`, which is needed in the final script.
+
 ## How to visualize solutions using Google Maps API
+1. Open file `map-plotting/animation/polyline-animation_googledev.html`. At the bottom of the script, insert your Maps JavaScript API key into the string variable `src="https://maps.googleapis.com/maps/api/js?key=INSERT-MAPS-JS-API-KEY-HERE&callback=initMap">`. 
+2.  Paste the contents of into the file `route-lat-lon.txt` into variable `var lineCoordinates`.
+2. Open `polyline-animation_googledev.html` in a browser. Enjoy :)
 
+As a final step, we then screen recorded the animation, trimmed, cropped, recompressed it and added a red trail (see next section)
 
-# The Team
-[Albert Miguel López](https://github.com/amiguello)  
-[Carl Assmann](https://github.com/carlassmann)  
-[Edyta Kabat](https://github.com/edyta-kabat)  
-[Gandalf Saxe](https://github.com/GandalfSaxe)  
-[Matthew Geleta](https://github.com/MatthewGeleta)  
-[Sara Battiston](https://www.facebook.com/BlackkRoseImmortal)  
+## How to add red motion lines to the route animation
+1. Run script `map-plotting/animation/animation-videos/red-motion-lines.py` on video file.
+
+Special thanks to my friend [jakejhansen](https://github.com/jakejhansen) for this script.
+
+*Warning: may require a somewhat cumbersome installation of `OpenCV` in python.*
 
 
