@@ -71,7 +71,7 @@ All code you need for finding a solution with our Penalty Scout Algorithm is wit
 2. Within the valuevertex function you can change which characteristics increase the value (our penalty).
 3. Within the nextpoint function the borders variable is representing probabilities for each element. Change several entries, if lower or higher probabilities are wanted.
 4. Choose, how many iterations you want to try and call the start_penalty_scout function. It will return the best candidate of all N attempts and the iteration number. And it will save a CSV-file containing all improvements and paths.
-5. Best path found will be last entry in the saved penaltyscoutlog.csv file.
+5. Best path found will be last entry in the saved penaltyscoutloglength.csv file.
 
 ## Convert list of nodes into list of coordinates
 1. Open `map-plotting/google_maps_plotting2.Rmd` (using RStudio).
