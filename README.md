@@ -43,11 +43,11 @@ However, since it's not Eulerian, this distance is not achievable and the snowpl
 Coming soon...
 
 ### Optimal solver
-<!--![Alberithm solution](https://github.com/GandalfSaxe/ecmi2017/blob/master/map-plotting/animation/animation-videos/final-animation-videos/alberithm.gif?raw=true)  
--->*Total travel distance: 30.5275 km*
+![Alberithm solution](https://github.com/GandalfSaxe/ecmi2017/blob/master/map-plotting/animation/animation-videos/final-animation-videos/alberithm.gif?raw=true)  
+*Total travel distance: 30.5275 km*
 
 ### Stochastic solver
-<!--![Carlgorithm solution](https://github.com/GandalfSaxe/ecmi2017/blob/master/map-plotting/animation/animation-videos/final-animation-videos/carlgorithm.gif?raw=true) --> 
+![Carlgorithm solution](https://github.com/GandalfSaxe/ecmi2017/blob/master/map-plotting/animation/animation-videos/final-animation-videos/carlgorithm.gif?raw=true)  
 *Total travel distance: 30.5275 km*
 
 
