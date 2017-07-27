@@ -4,14 +4,6 @@
 
 Project Lambda was about optimization of snow plowing operations in Skinnarila area near Lappeenranta. We wanted to minimize the distance travelled by the snow plowing vehicles, and if possible, prioritize roads differently.
 
-# The Team
-[Albert Miguel López](https://github.com/amiguello)  
-[Carl Assmann](https://github.com/carlassmann)  
-[Edyta Kabat](https://github.com/edyta-kabat)  
-[Gandalf Saxe](https://github.com/GandalfSaxe)  
-[Matthew Geleta](https://github.com/MatthewGeleta)  
-[Sara Battiston](https://www.facebook.com/BlackkRoseImmortal)
-
 
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
@@ -19,16 +11,16 @@ Project Lambda was about optimization of snow plowing operations in Skinnarila a
 - [1. Problem and results](#1-problem-and-results)
 	- [Presentation](#presentation)
 	- [Report](#report)
-  - [Animations](#animations)
-	  - [Optimal solver animation](#optimal-solver-animation)
-	  - [Stochastic solver animation](#stochastic-solver-animation)
+	- [Animations](#animations)
+		- [Optimal solver animation](#optimal-solver-animation)
+		- [Stochastic solver animation](#stochastic-solver-animation)
 - [2. How to use code](#2-how-to-use-code)
 	- [Obtain graph of road network](#obtain-graph-of-road-network)
 	- [Obtain solutions for efficient routes](#obtain-solutions-for-efficient-routes)
 	- [Convert list of nodes into list of coordinates](#convert-list-of-nodes-into-list-of-coordinates)
 	- [Visualize solutions using Google Maps API](#visualize-solutions-using-google-maps-api)
 	- [Add red motion lines to the route animation](#add-red-motion-lines-to-the-route-animation)
-
+- [The Team](#the-team)
 
 # Introduction
 The problem turned out to be a variation of the [Chinese Postman Problem](https://en.wikipedia.org/wiki/Route_inspection_problem) (CPP) (a.k.a route inspection problem) on a graph having road intersections as nodes and intersection distances as edges. With this basic model, the problem basically had three parts:
@@ -96,4 +88,12 @@ Special thanks to my friend [jakejhansen](https://github.com/jakejhansen) for th
 
 *Warning: may require a somewhat cumbersome installation of `OpenCV` in python.*
 
+
+# The Team
+[Albert Miguel López](https://github.com/amiguello)  
+[Carl Assmann](https://github.com/carlassmann)  
+[Edyta Kabat](https://github.com/edyta-kabat)  
+[Gandalf Saxe](https://github.com/GandalfSaxe)  
+[Matthew Geleta](https://github.com/MatthewGeleta)  
+[Sara Battiston](https://www.facebook.com/BlackkRoseImmortal)
 
