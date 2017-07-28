@@ -1,4 +1,4 @@
-# ECMI 2017: Optimization of Snow Plowing Routes
+# ECMI 2017: Snowplow Route Optimization
 
 [ECMI Modelling Week 2017](http://www.mafy.lut.fi/ECMIMW2017/) was a mathematics modeling week in Lappeenranta, Finland on July 9th - July 16th 2017. There were 9 teams, one for each of the [problems](http://www.mafy.lut.fi/ECMIMW2017/index.php?page=problems).
 
