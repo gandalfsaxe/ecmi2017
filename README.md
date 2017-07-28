@@ -50,11 +50,11 @@ Coming soon...
 
 ### Optimal solver animation
 ![Alberithm solution](https://github.com/GandalfSaxe/ecmi2017/blob/master/map-plotting/animation/animation-videos/final-animation-videos/alberithm.gif?raw=true)  
-*Total travel distance: 30.5275 km*
+*Total travel distance: 30.5275 km. Single-driver, priority 1 streets only.*
 
 ### Penalty scout animation
 ![Carlgorithm solution](https://github.com/GandalfSaxe/ecmi2017/blob/master/map-plotting/animation/animation-videos/final-animation-videos/carlgorithm.gif?raw=true)  
-*Total travel distance: 30.5275 km*
+*Total travel distance: 30.5275 km. Single-driver, priority 1 streets only.*
 
 
 # 2. How to use code
