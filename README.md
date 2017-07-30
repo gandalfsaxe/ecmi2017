@@ -1,4 +1,4 @@
-# ecmi2017
+# ECMI 2017: Snowplow Route Optimization
 
 [ECMI Modelling Week 2017](http://www.mafy.lut.fi/ECMIMW2017/) was a mathematics modeling week in Lappeenranta, Finland on July 9th - July 16th 2017. There were 9 teams, one for each of the [problems](http://www.mafy.lut.fi/ECMIMW2017/index.php?page=problems).
 
@@ -13,7 +13,7 @@ Project Lambda was about optimization of snow plowing operations in Skinnarila a
 	- [Report](#report)
 	- [Animations](#animations)
 		- [Optimal solver animation](#optimal-solver-animation)
-		- [Stochastic solver animation](#stochastic-solver-animation)
+		- [Penalty scout animation](#penality-scout-animation)
 - [2. How to use code](#2-how-to-use-code)
 	- [Obtain graph of road network](#obtain-graph-of-road-network)
 	- [Obtain solutions for efficient routes](#obtain-solutions-for-efficient-routes)
@@ -32,7 +32,7 @@ The problem turned out to be a variation of the [Chinese Postman Problem](https:
 And in summary we found:
 
 1. **Data acquisition:** We opted for the Google Maps API to create our graph, despite the free API-key limitations, since it was very easy to work with. We ended up making a graph of the limited area of priority 1 roads, in a very manual fashion.
-2. **Solution**: We basically worked on two solutions: 1. Optimal solution of basic CPP problem using by finding optimal pairings of odd-degree vertices (aided by [Blossom algorithm](https://en.wikipedia.org/wiki/Blossom_algorithm)) in order to restructure the graph into an Eulerian graph, for which the CPP can then solved in polynomial time, and 2. A stochastic algorithm with a cost function that penalize undesirable moves such as traveling the same edge multiple times, making needless U-turns etc.
+2. **Solution**: We basically worked on two solutions: 1. Optimal solution of basic CPP problem using by finding optimal pairings of odd-degree vertices (aided by [Blossom algorithm](https://en.wikipedia.org/wiki/Blossom_algorithm)) in order to restructure the graph into an Eulerian graph, for which the CPP can then solved in polynomial time, and 2. A stochastic algorithm (a.k.a. "penalty scout") with a cost function that penalize undesirable moves such as traveling the same edge multiple times, making needless U-turns etc.
 3. **Visualizing solution**: We used the [Google Maps Directions API](https://developers.google.com/maps/documentation/directions/) to obtain coordinates for routes between read intersections and [Google Maps Javascript API](https://developers.google.com/maps/documentation/javascript/) to animate a symbol on the maps (luckily Google had provided a some [nice sample code](https://developers.google.com/maps/documentation/javascript/examples/overlay-symbol-animate)). This could be done after the solution was converted from a list of nodes to a list of (latitude, longitude) coordinates, using the Google Maps Directions API
 
 # 1. Problem and results
@@ -50,11 +50,11 @@ Coming soon...
 
 ### Optimal solver animation
 ![Alberithm solution](https://github.com/GandalfSaxe/ecmi2017/blob/master/map-plotting/animation/animation-videos/final-animation-videos/alberithm.gif?raw=true)  
-*Total travel distance: 30.5275 km*
+*Total travel distance: 30.5275 km. Single-driver, priority 1 streets only.*
 
-### Stochastic solver animation
+### Penalty scout animation
 ![Carlgorithm solution](https://github.com/GandalfSaxe/ecmi2017/blob/master/map-plotting/animation/animation-videos/final-animation-videos/carlgorithm.gif?raw=true)  
-*Total travel distance: 30.5275 km*
+*Total travel distance: 30.5275 km. Single-driver, priority 1 streets only.*
 
 
 # 2. How to use code
@@ -66,12 +66,12 @@ Coming soon...
 ## Obtain solutions for efficient routes
 
 ### Find optimal route using Penalty scout algorithm
-All code you need for finding a solution with our Penalty Scout Algorithm is within the Penalty_Scout_Algorithm.py file.
-1. Create graph with the manual_map_one function, which is calling a CSV distance matrix. (If needed, add attributes such as visits within the function loop)
-2. Within the valuevertex function you can change which characteristics increase the value (our penalty).
-3. Within the nextpoint function the borders variable is representing probabilities for each element. Change several entries, if lower or higher probabilities are wanted.
-4. Choose, how many iterations you want to try and call the start_penalty_scout function. It will return the best candidate of all N attempts and the iteration number. And it will save a CSV-file containing all improvements and paths.
-5. Best path found will be last entry in the saved penaltyscoutloglength.csv file.
+All code you need for finding a solution with our Penalty Scout Algorithm is within the `Penalty_Scout_Algorithm.py` file.
+1. Create graph with the `manual_map_one` function, which is calling a distance matrix from a CSV file. (If needed, add attributes such as visits within the function loop)
+2. Within the `valuevertex` function you can change which characteristics increase the value (our penalty).
+3. Within the `nextpoint` function, the `borders` variable is representing probabilities for each element. Change several entries, if lower or higher probabilities are wanted.
+4. Choose how many iterations you want to try and call the `start_penalty_scout` function. It will return the best candidate of all N attempts and the iteration number. And it will save a CSV-file containing all improvements and paths.
+5. Best path found will be last entry in the saved `penaltyscoutloglength.csv` file.
 
 ## Convert list of nodes into list of coordinates
 1. Open `map-plotting/google_maps_plotting2.Rmd` (using RStudio).
