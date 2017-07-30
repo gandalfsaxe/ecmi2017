@@ -1,4 +1,0 @@
-Number of iterations tested: 100000
-Fitness of solution found: 108.784285714
-Path to follow is: 
-89154
