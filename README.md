@@ -13,10 +13,12 @@ Project Lambda was about optimization of snow plowing operations in Skinnarila a
 	- [Report](#report)
 	- [Animations](#animations)
 		- [Optimal solver animation](#optimal-solver-animation)
-		- [Penalty scout animation](#penality-scout-animation)
+		- [Penalty scout animation](#penalty-scout-animation)
 - [2. How to use code](#2-how-to-use-code)
 	- [Obtain graph of road network](#obtain-graph-of-road-network)
 	- [Obtain solutions for efficient routes](#obtain-solutions-for-efficient-routes)
+		- [Find optimal route using classical algorithm](#find-optimal-route-using-classical-algorithm)
+		- [Find optimal route using stochastic (penalty scout) algorithm](#find-optimal-route-using-stochastic-penalty-scout-algorithm)
 	- [Convert list of nodes into list of coordinates](#convert-list-of-nodes-into-list-of-coordinates)
 	- [Visualize solutions using Google Maps API](#visualize-solutions-using-google-maps-api)
 	- [Add red motion lines to the route animation](#add-red-motion-lines-to-the-route-animation)
@@ -64,8 +66,16 @@ Due to the time constraints, the following is a series of not-so-pretty, but fun
 Coming soon...
 
 ## Obtain solutions for efficient routes
+We arrived at the following two methods:
+* Solution 1: the classical algorithm (Eulerian-augmented graph + blossom) algorithm
+* Solution 2: the stochastic (penalty scout) algorithm
 
-### Find optimal route using Penalty scout algorithm
+See presentation and report for in-depth descriptions.
+
+### Find optimal route using classical algorithm
+Coming soon...
+
+### Find optimal route using stochastic (penalty scout) algorithm
 All code you need for finding a solution with our Penalty Scout Algorithm is within the `Penalty_Scout_Algorithm.py` file.
 1. Create graph with the `manual_map_one` function, which is calling a distance matrix from a CSV file. (If needed, add attributes such as visits within the function loop)
 2. Within the `valuevertex` function you can change which characteristics increase the value (our penalty).
