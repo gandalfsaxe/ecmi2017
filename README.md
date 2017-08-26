@@ -63,7 +63,17 @@ Coming soon...
 Due to the time constraints, the following is a series of not-so-pretty, but functional workflows of obtaining road graph data, obtaining route solutions and visualizing them using Google Maps API.
 
 ## Obtain graph of road network
-Coming soon...
+During the week, we tried to find a way to automatically generate a graph of a road network. The naive idea was following several steps:
+1. Take a list of street names
+2. Find all pairs of streets, which share an intersection and find the coordinates of this intersection
+3. Enumerate all intersections
+4. Identify for each intersection the neighbor intersections and find the distance from each intersection to its neighbors
+5. Use the values from step 4 to create a distance matrix
+6. With the distance matrix its easy to create a graph
+
+The thing about the workflow just mentioned is, that (not only) Lappeenranta has several intersections where a street crosses itself. Maybe also more than once which makes it difficult to identify all intersections just using the street list. It is also very hard to automatically identify neighbors for each intersection. But this part is essential, because if neighbors are missing, then our graph is not covering every street, but if we identify to many neighbors our graph covers some streets twice or even more.
+
+Also for all streets in Lappeenranta we would had to make around 50k Google Maps API requests only for finding all intersections, which exceeds the limit of 2500 free requests.
 
 ## Obtain solutions for efficient routes
 We arrived at the following two methods:
