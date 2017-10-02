@@ -83,7 +83,16 @@ We arrived at the following two methods:
 See presentation and report for in-depth descriptions.
 
 ### Find optimal route using classical algorithm
-Coming soon...
+All functions for the classical algorithm are in the `chinese_postmal_algorithm.py` file.
+1. Load graph from the `example_graph.py` script or create your own using networkx library.
+2. Call the `solve_chinese_postman_problem.py` function with the graph as first argument.
+3. Specify start/ending node with the "start" and "end" keyword arguments.
+	3a. If both are not specified (set to "None") random ones will be used.
+	3b. If start is specified but "end" is set to None, the output path will be closed.
+4. If the input is a multigraph (for roadmaps with two-way streets) set "is_multigraph" keyword argument to True.
+5. Set "matching_algorithm" to efficient for Blossom algorithm, or "original" for brute force (not recommended).
+6. Function will return the total distance traveled and a path that solves the chinese postman problem.
+7. If there is an error and the solution is wrong or the distance is not optimal, a message will be shown on screen.
 
 ### Find optimal route using stochastic (penalty scout) algorithm
 All code you need for finding a solution with our Penalty Scout Algorithm is within the `Penalty_Scout_Algorithm.py` file.
