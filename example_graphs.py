@@ -10,6 +10,81 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
+import seaborn as sns
+
+
+def draw_network_nice(G, labels = None, repeat_edges=[], pos=None):
+    ''' Draws network with:
+        - Node labels (big)
+        - Spring layout '''
+    
+    nodesize = 350
+    fontsize = 12
+    fontsize_edge = 8
+    w = 3
+    
+    nodesize = 900
+    fontsize = 17
+    fontsize_edge = 14
+    w = 3
+    
+    if type(labels) != type(None):
+        nx.relabel_nodes(G, labels)
+        
+    if type(pos) == type(None):
+        pos = nx.spring_layout(G)
+
+    nx.draw_networkx_nodes(G, pos, node_size=nodesize)
+    repeat_edge_positions = {} #{repeated edge : }
+    pos_up, pos_down = {},{}
+    separation = .015
+    for n1,n2 in repeat_edges:
+        pos_up = {u:v for u,v in pos.items()}
+        pos_down = {u:v for u,v in pos.items()}
+        vec = pos[n2] - pos[n1]
+        vec_perp = [-vec[1], vec[0]]
+        vec_perp = vec_perp/np.sqrt(vec_perp[0]**2 + vec_perp[1]**2)
+        pos_up[n1] = pos_up[n1] + separation*vec_perp
+        pos_up[n2] = pos_up[n2] + separation*vec_perp
+        pos_down[n1] = pos_down[n1] - separation*vec_perp
+        pos_down[n2] = pos_down[n2] - separation*vec_perp
+        repeat_edge_positions[(n1,n2)] = (pos_up, pos_down)
+        
+#    pos_up = {u:v+[0.01,0.01] for u,v in pos.items()}
+#    pos_down = {u:v-[0.01, 0.01] for u,v in pos.items()}
+        
+        
+    edge_labels = nx.get_edge_attributes(G, 'length')
+    for edge in G.edges_iter():
+        if edge not in repeat_edges:
+            nx.draw_networkx_edges(G, pos, edgelist = [edge], width=w, alpha=0.75, edge_color='indianred')
+            nx.draw_networkx_edge_labels(G, pos, edgelist = [edge], edge_labels={edge:edge_labels[edge]}, font_size=fontsize_edge, font_color='b')
+        else:
+            pos_up, pos_down = repeat_edge_positions[edge]
+            nx.draw_networkx_edges(G, pos_up, edgelist = [edge], width=w, alpha=0.75, edge_color='indianred')
+            nx.draw_networkx_edges(G, pos_down, edgelist = [edge], width=w, alpha=0.75, edge_color='indianred')
+            nx.draw_networkx_edge_labels(G, pos, edgelist = [edge], edge_labels={edge:edge_labels[edge]}, font_size=fontsize_edge, font_color='b')
+
+    labels={}
+    for ind, node in enumerate(G.nodes_iter()):
+        labels[node] = node
+    nx.draw_networkx_labels(G, pos, labels, font_size=fontsize)
+
+    plt.axis('off')
+    
+    return pos
+    
+def draw_network_with_labels(graph, layout = nx.spring_layout):
+    pos = layout(graph)
+    
+    labels = nx.get_edge_attributes(graph, 'length')
+    nx.draw_networkx(graph, pos=pos)
+    plt.axis('off')
+
+    if type(graph) == nx.classes.multigraph.MultiGraph:
+        return
+
+    nx.draw_networkx_edge_labels(graph, pos, edge_labels=labels)
 
 
 def create_graph_from_length_edges(edges, graph_type = nx.Graph):
@@ -48,7 +123,7 @@ def multigraph_to_graph(multigraph):
                            |         |
                            0         0
                            |         |
-                          AA -- 2 -- BB         
+                          A' -- 2 -- B'         
     '''
     
     graph = nx.Graph(multigraph)
@@ -105,12 +180,15 @@ def create_test_array_worked_example_33():
     edges = [('A','B',6),('A','C',6),('A','D',7),('B','D',5),('B','E',10),('C','D',8),('C','F',7),('D','E',6),('D','G',9),('D','F',11),('E','G',8),('E','H',7),('F','G',10),('F','H',9),('G','H',5)]
     return create_graph_from_length_edges(edges)
     
-def create_test_array_multigraph():
+def create_test_array_multigraph(return_multigraph=False):
     ''' Crates array with a two-way edge in MultiGraph format '''
-    edges = [('A','B',13),('A','C',12),('A','C',11),('A','F',10),('B','C',14),('C','D',9),('D','F',9),('D','E',7),('E','F',6)]
+    edges = [('A','B',13),('A','C',11),('A','C',11),('A','F',10),('B','C',14),('C','D',9),('D','F',9),('D','E',7),('E','F',6)]
     multigraph = create_graph_from_length_edges(edges, graph_type = nx.MultiGraph)
-    graph = multigraph_to_graph(multigraph)
-    return graph
+    if return_multigraph == False:
+        graph = multigraph_to_graph(multigraph)
+        return graph
+    else:
+        return multigraph
     
 def manual_map_one():
     ''' Creates the manual map '''
@@ -126,29 +204,61 @@ def manual_map_two_way():
     multigraph = make_graph_two_way(graph)
     return multigraph_to_graph(multigraph)
     
-def draw_network_with_labels(graph, layout = nx.spring_layout):
-    pos = layout(graph)
-    
-    labels = nx.get_edge_attributes(graph, 'length')
-    nx.draw_networkx(graph, pos=pos)
-    plt.axis('off')
 
-    if type(graph) == nx.classes.multigraph.MultiGraph:
-        return
-
-    nx.draw_networkx_edge_labels(graph, pos, edge_labels=labels)
     
 #def generate_random_graph(size, min_length = 0.0, max_length = 1.0, graph_type = 'barabasi_albert'):
 #    ''' Creates a random graph with weights within the specified numbers '''
 #    if graph_type == 'barabasi_albert':
 #        return nx.barabasi_albert_graph(size, 6)
     
-if __name__ == '__main__':
-#    g = create_test_array_worked_example_33()
+def figure_multigraph():
+    
+    g = create_test_array_multigraph(return_multigraph = True)
+    g = nx.Graph(g)
+    plt.figure(1)
+    pos = draw_network_nice(g, repeat_edges=[('A', 'C')])
+    inc = 0.99
+    vecC = pos['C'] - pos['D']
+    vecA = pos['A'] - pos['F']    
+    
+    pos['C\''] = pos['C'] + inc*vecC
+    pos['A\''] = pos['A'] + inc*vecA
+    
+    plt.figure(2)
     g = create_test_array_multigraph()
-#    g = manual_map_one()
+    g = multigraph_to_graph(g)
+    pos = draw_network_nice(g, pos=pos)
+    ax = plt.gca()
+    xmin, xmax = ax.get_xlim(); ymin, ymax = ax.get_ylim()
     
-    print g.edges()    
+    plt.figure(1)
+    plt.axis([xmin, xmax, ymin, ymax])
+
+
+
     
-    draw_network_with_labels(g, layout = nx.spring_layout)
+
+    
+def main():
+    
+    figure_multigraph()
     plt.show()
+    return
+    
+#    g = create_test_array_worked_example_33()
+#    g = create_test_array_multigraph()
+#    g = manual_map_one()
+    g = create_test_array_with_dead_end()
+    
+#    print g.edges()   
+    
+#    draw_network_with_labels(g, layout = nx.spring_layout)
+    plt.figure(1)
+    pos = draw_network_nice(g, repeat_edges=[(1,2),(3,4),(6,7)])
+    plt.figure(2)
+    pos = draw_network_nice(g, pos=pos)
+    plt.show()
+    
+if __name__ == '__main__':
+
+    main()

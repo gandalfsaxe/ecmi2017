@@ -251,7 +251,7 @@ def get_all_possible_pairings(node_list, remove1, remove2):
     
 def solve_chinese_postman_problem(graph, start=None, end=None, matching_algorithm = 'efficient', is_multigraph = False):
     ''' Solves the chinese postman problem using the classical solution.
-    'Efficient' algorithm uses Edmund and Johnson's solution (1976) to find optimal edges to be added.
+    'Efficient' algorithm uses Edmund and Johnson's solution (1976) to find optimal edges.
     'Original' tries all possible edge combinations and selects the smallest one (slow) '''
     
     #Deals with start/end nodes and computes least total distance and backtracked nodes
@@ -273,6 +273,7 @@ def solve_chinese_postman_problem(graph, start=None, end=None, matching_algorith
             print 'WARNING: start and/or end are not odd, ending point might be unexpected'
         #If both start and end are specified, check if they are odd nodes
         current_odd_node_list = copy.deepcopy(odd_node_list)
+        print current_odd_node_list, len(current_odd_node_list)
         
         if start != end:
             try:
@@ -292,7 +293,8 @@ def solve_chinese_postman_problem(graph, start=None, end=None, matching_algorith
     graph_extended = nx.MultiGraph(graph)
     for node1,node2 in backtracked_edges:
         graph_extended.add_edge(node1, node2, attr_dict = {'length': graph[node1][node2]['length']})
-     
+    print backtracked_edges
+    
     if start == end:
         path = find_eulerian_path_same_startend(graph_extended, start)
     else:
@@ -384,16 +386,16 @@ def main():
     is_multigraph = False
     
 #    graph = example_graphs.create_test_array(); start = 1; end = 1
-#    graph = example_graphs.create_test_array_with_dead_end(); start = 1; end = 1
+    graph = example_graphs.create_test_array_with_dead_end(); start = 1; end = 2
 
 #    graph = example_graphs.create_test_array_notebook(); start = 'A'; end = 'H'
-    graph = example_graphs.create_test_array_worked_example_33(); start = 'A'; end = 'A'
+#    graph = example_graphs.create_test_array_worked_example_33(); start = 'A'; end = 'A'
 
     graph = example_graphs.manual_map_one(); start = 0; end = 0
 #    print calculate_distance(graph, [0, 1, 6, 8, 7, 11, 14, 18, 21, 20, 13, 12, 10, 12, 17, 20, 13, 14, 18, 15, 19, 22, 23, 21, 18, 15, 11, 7, 5, 6, 8, 9, 16, 19, 22, 16, 9, 3, 4, 3, 2, 1, 0])
 #    
 #    graph = example_graphs.create_test_array_multigraph(); start='A'; end = 'A'; is_multigraph=True
-#    graph = example_graphs.manual_map_two_way(); start=0; end = 0; is_multigraph=True
+    graph = example_graphs.manual_map_two_way(); start=1; end = 1; is_multigraph=True
 
     least_total_distance, path = solve_chinese_postman_problem(graph, start=start, end=end, matching_algorithm='efficient', is_multigraph=is_multigraph)
     print path, least_total_distance
