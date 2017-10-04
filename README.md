@@ -46,7 +46,8 @@ However, since it's not Eulerian, this distance is not achievable and the snowpl
 [Link to presentation (Overleaf, read-only)](https://www.overleaf.com/read/ywjqndnytwkz)
 
 ## Report
-Coming soon...
+[Link to report (PDF)](https://github.com/GandalfSaxe/ecmi2017/blob/master/presentation/presentation.pdf)  
+[Link to report (Overleaf, read-only)](https://www.overleaf.com/read/xfgsdmqmwjvf)
 
 ## Animations
 
